@@ -1,19 +1,24 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <SDL/SDL.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#if defined __linux
+#include <GL/gl.h>
+#include <GL/glu.h>
+#elif defined __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#endif
 
 
 void setVideoMode() {
-  if(NULL == SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE)) {
+  if(NULL == SDL_SetVideoMode(500, 500, 32, SDL_OPENGL | SDL_RESIZABLE)) {
     fprintf(stderr, "Impossible d'ouvrir la fenetre. Fin du programme.\n");
     exit(EXIT_FAILURE);
   }
-  reshape();
+  /*reshape();*/
   glClear(GL_COLOR_BUFFER_BIT);
   SDL_GL_SwapBuffers();
 }
@@ -48,8 +53,8 @@ int main(int argc, char** argv) {
     }
 
     Uint32 elapsedTime = SDL_GetTicks() - startTime;
-    if(elapsedTime < FRAMERATE_MILLISECONDS) {
-      SDL_Delay(FRAMERATE_MILLISECONDS - elapsedTime);
+    if(elapsedTime < 1000/60) {
+      SDL_Delay( 1000/60 - elapsedTime);
     }
   }
 

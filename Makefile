@@ -1,6 +1,12 @@
 CC = gcc
 CFLAGS = -Wall -ansi
-LDFLAGS = -lSDL -lGLU -lGL -lm
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+	LDFLAGS = -lSDL -lGLU -lGL -lm
+endif
+ifeq ($(UNAME_S),Darwin)
+	LDFLAGS= -framework OpenGL -framework Cocoa -lm -lSDL -lSDLmain -framework SDL
+endif
 
 APP_BIN = biri
 
