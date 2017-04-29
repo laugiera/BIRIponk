@@ -12,7 +12,9 @@
 #include <OpenGL/glu.h>
 #endif
 #include "fonctions.h"
-#include "canonics.h"
+#include "geometry/canonics.h"
+#include "geometry/point_vect.h"
+#include "elements/ball.h"
 
 
 int main(int argc, char** argv) {
@@ -23,6 +25,12 @@ int main(int argc, char** argv) {
   setVideoMode();
   SDL_WM_SetCaption("BIRIPONG", NULL);
 
+  CustomColor vert = {100, 200, 0};
+  Ball ballon;
+  ballon.position = pointXYZ(0,0,0);
+  ballon.diam = 40;
+  ballon.color = vert;
+  ballon.velocity = vectorXYZ(1,1,0);
 
 
   /*BOUCLE D'AFFICHAGE*/
@@ -30,15 +38,13 @@ int main(int argc, char** argv) {
   while(loop) {
     Uint32 startTime = SDL_GetTicks();
 
+    /*UPDATE*/
+    update_position(&ballon);
 
     /*DESSIN*/
     glClear(GL_COLOR_BUFFER_BIT);
     /**/
-    CustomColor vert = {100, 200, 0};
-    glPushMatrix();
-    glScalef(30,30,0);
-    draw_rounded_square(0, 0.2, vert);
-    glPopMatrix();
+    draw_ball(ballon);
     /**/
     SDL_GL_SwapBuffers();
     /* ****** */
