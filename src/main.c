@@ -15,7 +15,9 @@
 #include "geometry/canonics.h"
 #include "geometry/point_vect.h"
 #include "elements/ball.h"
-
+#include "elements/player.h"
+#include "elements/brique.h"
+#include "elements/barre.h"
 
 int main(int argc, char** argv) {
   if(-1 == SDL_Init(SDL_INIT_VIDEO)) {

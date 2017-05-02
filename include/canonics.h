@@ -2,7 +2,7 @@
 #define CANONICS_H_
 
 static const float PI = 3.1415926535;
-static int SEGMT = 64;
+/*static int SEGMT = 64;*/
 
 typedef struct _customColor{
   int r,g,b;
