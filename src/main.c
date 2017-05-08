@@ -27,26 +27,10 @@ int main(int argc, char** argv) {
   setVideoMode();
   SDL_WM_SetCaption("BIRIPONG", NULL);
 
-  CustomColor vert = {100, 200, 0};
-  Ball ballon;
-  ballon.position = pointXY(0,0);
-  ballon.diam = 40;
-  ballon.color = vert;
-  ballon.velocity = vectorXY(1,1);
+  Player p_bas, p_haut;
 
-  Barre barre_bas;
-  barre_bas.hauteur = 10;
-  barre_bas.largeur = 30;
-  barre_bas.position = pointXY(0,-(100-(barre_bas.hauteur/2)));
-  barre_bas.color = vert;
-  barre_bas.velocity = vectorXY(1,1);
-
-  Barre barre_haut;
-  barre_haut.hauteur = 10;
-  barre_haut.largeur = 30;
-  barre_haut.position = pointXY(0,(100-(barre_haut.hauteur/2)));
-  barre_haut.color = vert;
-  barre_haut.velocity = vectorXY(1,1);
+  init_player(&p_bas,1);
+  init_player(&p_haut,2);
 
   /*BOUCLE D'AFFICHAGE*/
   int loop = 1;
@@ -56,22 +40,22 @@ int main(int argc, char** argv) {
     Uint32 startTime = SDL_GetTicks();
 
     /*UPDATE*/
-    update_position(&ballon);
+    update_position(p_bas.ball);
+
     if ( keystate['q'] )
-      update_br_position(&barre_bas,gauche);
+      update_br_position(p_bas.barre,gauche);
     else if ( keystate['d'] )
-      update_br_position(&barre_bas,droite);
+      update_br_position(p_bas.barre,droite);
     else if ( keystate[SDLK_LEFT]  )
-      update_br_position(&barre_haut,gauche);
+      update_br_position(p_haut.barre,gauche);
     else if ( keystate[SDLK_RIGHT] )
-      update_br_position(&barre_haut,droite);
+      update_br_position(p_haut.barre,droite);
 
     /*DESSIN*/
     glClear(GL_COLOR_BUFFER_BIT);
     /**/
-    /*draw_ball(ballon);*/
-    draw_barre(barre_bas);
-    draw_barre(barre_haut);
+    draw_ball(*p_bas.ball);
+    draw_barre(*p_bas.barre);
     /**/
     SDL_GL_SwapBuffers();
     /* ****** */
@@ -102,6 +86,8 @@ int main(int argc, char** argv) {
     }
   }
 
+  free_player(&p_bas);
+  free_player(&p_haut);
   SDL_Quit();
 
   return EXIT_SUCCESS;

@@ -7,9 +7,11 @@
 typedef struct _player{
   int id;
   float vie;
-  struct _ball ball;
-  struct _barre barre;
+  struct _ball * ball;
+  struct _barre * barre;
 }Player;
 
+void init_player(Player *p, int id);
+void free_player(Player *p);
 
 #endif

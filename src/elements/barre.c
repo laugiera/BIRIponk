@@ -16,6 +16,15 @@
 #include "fonctions.h"
 #include "elements/barre.h"
 
+void init_barre(Barre *br){
+  CustomColor rouge = {255, 50, 0};
+  br->hauteur = 10;
+  br->largeur = 30;
+  br->position = pointXY(0,-(100-(br->hauteur/2)));
+  br->color = rouge;
+  br->velocity = vectorXY(1,1);
+}
+
 void draw_barre(Barre br){
   glPushMatrix();
   glTranslatef(br.position.x, br.position.y, 0);

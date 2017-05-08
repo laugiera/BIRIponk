@@ -16,6 +16,13 @@
 #include "fonctions.h"
 #include "elements/ball.h"
 
+void init_ball(Ball *b){
+  CustomColor vert = {100, 200, 0};
+  b->position = pointXY(0,0);
+  b->diam = 40;
+  b->color = vert;
+  b->velocity = vectorXY(1,1);
+}
 
 void draw_ball(Ball b){
   glPushMatrix();
@@ -33,7 +40,7 @@ void update_position(Ball *b){
 void check_edges(Ball *b){
   if(b->position.x>= 100-b->diam/2 ||
     b->position.x<= -100+b->diam/2 ||
-    b->position.y>= 100-b->diam/2) 
+    b->position.y>= 100-b->diam/2)
     {
       b->velocity = multVector(b->velocity, -1);
     }

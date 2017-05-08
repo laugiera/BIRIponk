@@ -8,6 +8,7 @@ typedef struct _ball{
   struct _vector3D velocity;
 }Ball;
 
+void init_ball(Ball *b);
 void draw_ball(Ball b);
 void update_position(Ball *b);
 void check_edges(Ball *b);

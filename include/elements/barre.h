@@ -9,6 +9,7 @@ typedef struct _barre{
   struct _vector3D velocity;
 }Barre;
 
+void init_barre(Barre *br);
 void draw_barre(Barre br);
 void update_br_position(Barre *br, int sens);
 
