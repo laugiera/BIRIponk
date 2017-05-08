@@ -1,48 +1,48 @@
 #include "geometry/point_vect.h"
 #include "math.h"
 
-Point3D pointXYZ(float x, float y, float z){
-  Point3D p = {x,y,z};
+Point3D pointXY(float x, float y ){
+  Point3D p = {x,y};
   return p;
 }
 
-Vector3D vectorXYZ(float x, float y, float z){
-  Vector3D v = {x, y, z};
+Vector3D vectorXY(float x, float y){
+  Vector3D v = {x, y};
   return v;
 }
 
 Vector3D vector(Point3D A, Point3D B){
-  Vector3D v = vectorXYZ(B.x-A.x, B.y-A.y, B.z-A.z);
+  Vector3D v = vectorXY(B.x-A.x, B.y-A.y);
   return v;
 }
 
 Point3D pointPlusVector(Point3D P, Vector3D V){
-  Point3D p = pointXYZ(P.x+V.x, P.y+V.y, P.z+V.z);
+  Point3D p = pointXY(P.x+V.x, P.y+V.y);
   return p;
 }
 
 Vector3D addVectors(Vector3D A, Vector3D B){
-  Vector3D v = vectorXYZ(A.x+B.x, A.y+B.y, A.z+B.z);
+  Vector3D v = vectorXY(A.x+B.x, A.y+B.y);
   return v;
 }
 
 Vector3D subVectors(Vector3D A, Vector3D B){
-  Vector3D v = vectorXYZ(A.x-B.x, A.y-B.y, A.z-B.z);
+  Vector3D v = vectorXY(A.x-B.x, A.y-B.y);
   return v;
 }
 
 Vector3D multVector(Vector3D V, float s){
-  Vector3D v = vectorXYZ(V.x*s, V.y*s, V.z*s);
+  Vector3D v = vectorXY(V.x*s, V.y*s);
   return v;
 }
 
 Vector3D DivVector(Vector3D V, float s){
-  Vector3D v = vectorXYZ(V.x/s, V.y/s, V.z/s);
+  Vector3D v = vectorXY(V.x/s, V.y/s);
   return v;
 }
 
 float dotProduct(Vector3D A, Vector3D B){
-  float result = A.x*B.x + A.y*B.y + A.z*B.z;
+  float result = A.x*B.x + A.y*B.y;
   return result;
 }
 
@@ -51,7 +51,7 @@ float norm(Vector3D V){
   return norm;
 }
 
-Vector3D normalize(Vector3D V){
+Vector3D normalie(Vector3D V){
   float n = norm(V);
   Vector3D v = DivVector(V, n);
   return v;

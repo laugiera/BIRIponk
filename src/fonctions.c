@@ -13,6 +13,7 @@
 #endif
 #include "fonctions.h"
 
+
 void setVideoMode() {
   if(NULL == SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE)) {
     fprintf(stderr, "Impossible d'ouvrir la fenetre. Fin du programme.\n");

@@ -3,15 +3,15 @@
 
 
 typedef struct _vector3D{
-  float x, y, z;
+  float x, y;
 }Vector3D;
 
 typedef struct _point3D{
-  float x, y, z;
+  float x, y;
 }Point3D;
 
-Point3D pointXYZ(float x, float y, float z);
-Vector3D vectorXYZ(float x, float y, float z);
+Point3D pointXY(float x, float y);
+Vector3D vectorXY(float x, float y);
 Vector3D vector(Point3D A, Point3D B);
 Point3D pointPlusVector(Point3D P, Vector3D V);
 Vector3D addVectors(Vector3D A, Vector3D B);

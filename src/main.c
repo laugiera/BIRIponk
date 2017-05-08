@@ -29,24 +29,49 @@ int main(int argc, char** argv) {
 
   CustomColor vert = {100, 200, 0};
   Ball ballon;
-  ballon.position = pointXYZ(0,0,0);
+  ballon.position = pointXY(0,0);
   ballon.diam = 40;
   ballon.color = vert;
-  ballon.velocity = vectorXYZ(1,1,0);
+  ballon.velocity = vectorXY(1,1);
 
+  Barre barre_bas;
+  barre_bas.hauteur = 10;
+  barre_bas.largeur = 30;
+  barre_bas.position = pointXY(0,-(100-(barre_bas.hauteur/2)));
+  barre_bas.color = vert;
+  barre_bas.velocity = vectorXY(1,1);
+
+  Barre barre_haut;
+  barre_haut.hauteur = 10;
+  barre_haut.largeur = 30;
+  barre_haut.position = pointXY(0,(100-(barre_haut.hauteur/2)));
+  barre_haut.color = vert;
+  barre_haut.velocity = vectorXY(1,1);
 
   /*BOUCLE D'AFFICHAGE*/
   int loop = 1;
+  Uint8 *keystate = SDL_GetKeyState(NULL);
+
   while(loop) {
     Uint32 startTime = SDL_GetTicks();
 
     /*UPDATE*/
     update_position(&ballon);
+    if ( keystate['q'] )
+      update_br_position(&barre_bas,gauche);
+    else if ( keystate['d'] )
+      update_br_position(&barre_bas,droite);
+    else if ( keystate[SDLK_LEFT]  )
+      update_br_position(&barre_haut,gauche);
+    else if ( keystate[SDLK_RIGHT] )
+      update_br_position(&barre_haut,droite);
 
     /*DESSIN*/
     glClear(GL_COLOR_BUFFER_BIT);
     /**/
-    draw_ball(ballon);
+    /*draw_ball(ballon);*/
+    draw_barre(barre_bas);
+    draw_barre(barre_haut);
     /**/
     SDL_GL_SwapBuffers();
     /* ****** */
@@ -58,8 +83,12 @@ int main(int argc, char** argv) {
           loop=0;
           break;
         case SDL_KEYDOWN:
-          if (e.key.keysym.sym == 'q' || e.key.keysym.sym == SDLK_ESCAPE) {
-            loop = 0;
+          switch (e.key.keysym.sym) {
+            case SDLK_ESCAPE:
+              loop = 0;
+              break;
+            default:
+              break;
           }
           break;
         default:
