@@ -7,6 +7,7 @@
 #if defined __linux
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <SDL/SDL_image.h>
 #elif defined __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -32,6 +33,35 @@ int main(int argc, char** argv) {
   init_player(&p_bas,1);
   init_player(&p_haut,2);
 
+  /*TEXTURE*/
+  /*SDL_Surface * img = IMG_Load("img/gintama.jpg");
+  int i,nb_textures = 3;
+  GLuint textures[nb_textures];
+  glEnable(GL_TEXTURE_2D);
+  glGenTextures(nb_textures,textures);
+  for (i = 0; i < nb_textures; i++){
+      glBindTexture(GL_TEXTURE_2D,textures[i]);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      GLenum format;
+      switch (img->format->BytesPerPixel) {
+        case 1:
+          format=GL_RED;
+          break;
+        case 3:
+          format = GL_RGB;
+          break;
+        case 4:
+          format = GL_RGBA;
+
+          break;
+        default:
+          fprintf(stderr, "Format des pixels de l’image  non pris en charge\n");
+          return EXIT_FAILURE;
+        }
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img->w, img->h, 0, format, GL_UNSIGNED_BYTE, img->pixels);
+      glBindTexture(GL_TEXTURE_2D,0);
+    }*/
+
   /*BOUCLE D'AFFICHAGE*/
   int loop = 1;
   Uint8 *keystate = SDL_GetKeyState(NULL);
@@ -53,10 +83,29 @@ int main(int argc, char** argv) {
 
     /*DESSIN*/
     glClear(GL_COLOR_BUFFER_BIT);
-    /**/
+    /*
+    glPushMatrix();
+    glScalef(60,60,0);
+
+    glEnable(GL_TEXTURE_2D);
+    glColor4f(1.0, 1.0, 1.0, 1.0);
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(0,0);     glVertex2f(1, 1);
+    glTexCoord2f(0,1);    glVertex2f(1, -1);
+    glTexCoord2f(1,1);    glVertex2f(-1, -1);
+    glTexCoord2f(1,0);    glVertex2f(-1, 1);
+    glEnd();
+
+    glPopMatrix();*/
+
+    /*glBindTexture(GL_TEXTURE_2D, textures[1]);*/
     draw_ball(*p_bas.ball);
+    /*glBindTexture(GL_TEXTURE_2D, textures[2]);*/
     draw_barre(*p_bas.barre);
-    /**/
+
+    /*glDisable(GL_TEXTURE_2D);*/
+
     SDL_GL_SwapBuffers();
     /* ****** */
 
@@ -85,6 +134,13 @@ int main(int argc, char** argv) {
       SDL_Delay( 1000/60 - elapsedTime);
     }
   }
+
+  /*FREE*/
+
+  /*SDL_FreeSurface(img);
+  for (i = 0; i < nb_textures; i++)
+    glBindTexture(GL_TEXTURE_2D,0);
+  glDeleteTextures(nb_textures,textures);*/
 
   free_player(&p_bas);
   free_player(&p_haut);

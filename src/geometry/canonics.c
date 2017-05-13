@@ -26,6 +26,7 @@ void draw_circle(int full, CustomColor color) {
   for (theta = 0; theta<2*PI; theta+= (2*PI)/SEGMT) {
     x = 0.5*cos(theta);
     y = 0.5*sin(theta);
+    /*glTexCoord2f(x+0.5,y+0.5);*/
     glVertex2f(x, y);
   }
   glEnd();
@@ -90,9 +91,13 @@ void draw_rounded_square(int full, float radius, CustomColor color) {
 void draw_rectangle(CustomColor color, float hauteur, float largeur) {
   glBegin(GL_POLYGON);
   glColor3ub(color.r, color.g, color.b);
+  /*glTexCoord2f(0,0);*/
   glVertex2f(-(largeur/2), hauteur/2);
+  /*glTexCoord2f(1,0);*/
   glVertex2f(largeur/2, hauteur/2);
+  /*glTexCoord2f(1,1);*/
   glVertex2f(largeur/2, -(hauteur/2));
+  /*glTexCoord2f(0,1);*/
   glVertex2f(-(largeur/2), -(hauteur/2));
   glEnd();
 }
