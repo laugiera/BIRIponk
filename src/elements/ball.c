@@ -32,12 +32,13 @@ void draw_ball(Ball b){
   glPopMatrix();
 }
 
-void update_position(Ball *b){
+void update_ball_position(Ball *b, Gameboard *gb){
   b->position = pointPlusVector(b->position, b->velocity);
-  check_edges(b);
+  ball_check_edges(b);
+  ball_check_bat(b, gb);
 }
 
-void check_edges(Ball *b){
+void ball_check_edges(Ball *b){
   if(b->position.x>= 100-b->diam/2 ||
     b->position.x<= -100+b->diam/2 ||
     b->position.y>= 100-b->diam/2)
@@ -45,4 +46,20 @@ void check_edges(Ball *b){
       b->velocity = multVector(b->velocity, -1);
     }
   if(b->position.y<= -100+b->diam/2){b->position.y = -100+b->diam/2;}
+}
+
+void ball_check_bat(Ball *ball, Gameboard *board) {
+  int i;
+  for (i=0; i<board->nb_players; i++){
+    Bat bat = *board->players[i].bat;
+    float dist_x = fabs(bat.position.x-ball->position.x)-ball->diam/2;
+    float dist_y = fabs(bat.position.y-ball->position.y)-ball->diam/2;
+    if(dist_x <= bat.length/2 && dist_y <= bat.height/2){
+      /*float ratio = dist_x/bat.length/2;*/
+      printf("COLLISION\n");
+      ball->velocity = multVector(ball->velocity, -1);
+      return;
+    }
+  }
+  return;
 }

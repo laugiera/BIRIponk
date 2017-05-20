@@ -51,7 +51,7 @@ float norm(Vector3D V){
   return norm;
 }
 
-Vector3D normalie(Vector3D V){
+Vector3D normalize(Vector3D V){
   float n = norm(V);
   Vector3D v = DivVector(V, n);
   return v;

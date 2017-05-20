@@ -15,10 +15,7 @@
 #include "fonctions.h"
 #include "geometry/canonics.h"
 #include "geometry/point_vect.h"
-#include "elements/ball.h"
-#include "elements/player.h"
-#include "elements/brique.h"
-#include "elements/barre.h"
+#include "elements/gameboard.h"
 
 int main(int argc, char** argv) {
   if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
@@ -28,10 +25,13 @@ int main(int argc, char** argv) {
   setVideoMode();
   SDL_WM_SetCaption("BIRIPONG", NULL);
 
+  /* depreciated
   Player p_bas, p_haut;
-
   init_player(&p_bas,1);
   init_player(&p_haut,2);
+  */
+ Gameboard gb;
+ init_gameboard(&gb,1,"unfilequelquepart");
 
   /*TEXTURE*/
   /*SDL_Surface * img = IMG_Load("img/gintama.jpg");
@@ -70,16 +70,19 @@ int main(int argc, char** argv) {
     Uint32 startTime = SDL_GetTicks();
 
     /*UPDATE*/
-    update_position(p_bas.ball);
+
+    update_ball_position(gb.players[0].ball, &gb);
 
     if ( keystate['q'] )
-      update_br_position(p_bas.barre,gauche);
+      update_bat_position(gb.players[0].bat,gauche);
     else if ( keystate['d'] )
-      update_br_position(p_bas.barre,droite);
+      update_bat_position(gb.players[0].bat,droite);
+      /*
     else if ( keystate[SDLK_LEFT]  )
-      update_br_position(p_haut.barre,gauche);
+      update_bat_position(p_haut.bat,gauche);
     else if ( keystate[SDLK_RIGHT] )
-      update_br_position(p_haut.barre,droite);
+      update_bat_position(p_haut.bat,droite);
+      */
 
     /*DESSIN*/
     glClear(GL_COLOR_BUFFER_BIT);
@@ -98,11 +101,17 @@ int main(int argc, char** argv) {
     glEnd();
 
     glPopMatrix();*/
+    /* affichage pour les textures
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    draw_ball(*gb.players[0].ball);
+    glBindTexture(GL_TEXTURE_2D, textures[2]);
+    draw_bat(*gb.players[0].bat);
+    */
 
-    /*glBindTexture(GL_TEXTURE_2D, textures[1]);*/
-    draw_ball(*p_bas.ball);
-    /*glBindTexture(GL_TEXTURE_2D, textures[2]);*/
-    draw_barre(*p_bas.barre);
+    /* affichage sans les textures, il faudrait pouvoir adapter les textures à ça
+    surement que passer le tableau de textures en paramètres suffit mais dans le doute je touche pas
+    */
+    draw_gameboard(gb);
 
     /*glDisable(GL_TEXTURE_2D);*/
 
@@ -141,9 +150,11 @@ int main(int argc, char** argv) {
   for (i = 0; i < nb_textures; i++)
     glBindTexture(GL_TEXTURE_2D,0);
   glDeleteTextures(nb_textures,textures);*/
-
+  /*
   free_player(&p_bas);
   free_player(&p_haut);
+  */
+  free_gameboard(&gb);
   SDL_Quit();
 
   return EXIT_SUCCESS;

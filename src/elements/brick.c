@@ -14,4 +14,4 @@
 #include "geometry/canonics.h"
 #include "geometry/point_vect.h"
 #include "fonctions.h"
-#include "elements/brique.h"
+#include "elements/brick.h"
