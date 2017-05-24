@@ -32,11 +32,15 @@ Vector3D subVectors(Vector3D A, Vector3D B){
 }
 
 Vector3D multVector(Vector3D V, float s){
+
   Vector3D v = vectorXY(V.x*s, V.y*s);
   return v;
 }
 
 Vector3D DivVector(Vector3D V, float s){
+  if(s == 0) {
+    return vectorXY(0,0);
+  }
   Vector3D v = vectorXY(V.x/s, V.y/s);
   return v;
 }
@@ -51,8 +55,11 @@ float norm(Vector3D V){
   return norm;
 }
 
-Vector3D normalie(Vector3D V){
+Vector3D normalize(Vector3D V){
   float n = norm(V);
+  if(n == 0) {
+    return vectorXY(0,0);
+  }
   Vector3D v = DivVector(V, n);
   return v;
 }

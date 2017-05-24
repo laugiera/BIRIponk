@@ -18,18 +18,20 @@
 
 void init_player(Player *p, int id){
   p->id=id;
-  p->vie = 5.0;
+  p->life = 5.0;
   p->ball = malloc(sizeof(Ball));
   if(!p->ball)
     exit(1);
-  p->barre = malloc(sizeof(Barre));
-  if(!p->barre)
+  p->bat = malloc(sizeof(Bat));
+  if(!p->bat)
     exit(1);
-  init_ball(p->ball);
-  init_barre(p->barre);
+  init_bat(p->bat, p);
+  init_ball(p->ball, p);
+
+
 }
 
 void free_player(Player *p){
   free(p->ball);
-  free(p->barre);
+  free(p->bat);
 }
