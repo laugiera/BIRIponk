@@ -18,7 +18,8 @@
 
 void init_ball(Ball *b, Player *p){
   CustomColor vert = {100, 200, 0};
-  b->position = pointXY(0,0);
+  b->player = p;
+  b->position = pointPlusVector(b->player->bat->position, multVector(b->player->start_orientation, b->player->bat->height/2+b->diam/2));
   b->diam = 20;
   b->color = vert;
   b->velocity = p->start_orientation;
@@ -37,9 +38,10 @@ void update_ball_position(Ball *b, Gameboard *gb){
 
   Vector3D acceleration = multVector(normalize(b->velocity), b->speed);
   b->position = pointPlusVector(b->position, addVectors(b->velocity, acceleration));
+  ball_check_death(b, gb);
   ball_check_edges(b);
   ball_check_bat(b, gb);
-  printf("acc: %f\n", norm(acceleration));
+
 }
 
 void ball_check_edges(Ball *b){
@@ -68,4 +70,33 @@ void ball_check_bat(Ball *ball, Gameboard *board) {
     }
   }
   return;
+}
+
+void ball_check_death(Ball *ball, Gameboard *board){
+ int i;
+ for (i=0; i<board->nb_players; i++){
+   Player *p = &(board->players[i]);
+   float factor = p->start_orientation.y;
+   /* à réutiliser pour faire le 2++ joueurs
+   if (factor ==0){
+     factor = board->players[i].start_orientation.x;
+   }
+   */
+   float dist_y = (p->start_position.y - ball->position.y) + factor*ball->diam/2;
+   factor *= -1;
+   dist_y *= factor;
+   if (dist_y <= 0) {
+      printf("DEATH\n");
+      p->life -= 1.0;
+      ball->position = pointPlusVector(ball->player->bat->position, multVector(ball->player->start_orientation, ball->player->bat->height/2+ball->diam/2));
+      /* à garder si on implement le choix de quand commencer la partie
+      ball->velocity = vectorXY(0,0);
+       */
+      ball->velocity = ball->player->start_orientation;
+
+   }
+
+
+
+ }
 }

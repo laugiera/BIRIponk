@@ -4,6 +4,7 @@
 #include "elements/gameboard.h"
 
 typedef struct _ball{
+  struct _player *player;
   struct _point3D position;
   float diam;
   struct _customColor color;
@@ -16,5 +17,6 @@ void draw_ball(Ball b);
 void update_ball_position(Ball *b, struct _gameboard *board);
 void ball_check_edges(Ball *b);
 void ball_check_bat(Ball *ball, struct _gameboard *board);
+void ball_check_death(Ball *ball, struct _gameboard *board);
 
 #endif
