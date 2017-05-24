@@ -15,3 +15,35 @@
 #include "geometry/point_vect.h"
 #include "fonctions.h"
 #include "elements/brique.h"
+
+void init_brique(Brique *b){
+  /*charge le fichier de briques*/
+
+}
+/*pour 2 joueurs,
+    nb = largeur fenetre/largeur brique
+  pour 3 joueurs ou plus
+    nb = */
+void draw_brique(Brique *briques, int nb){
+  int i;
+  glBegin(GL_POLYGON);
+  for (i = 0; i < nb; i++) {
+    switch (briques[i].nb_cotes) {
+      case 2:
+        glColor3ub(briques[i].color.r, briques[i].color.g, briques[i].color.b);
+        /*glTexCoord2f(0,0);*/
+        glVertex2f(-(briques[i].largeur/2), briques[i].hauteur/2);
+        /*glTexCoord2f(1,0);*/
+        glVertex2f(briques[i].largeur/2, briques[i].hauteur/2);
+        /*glTexCoord2f(1,1);*/
+        glVertex2f(briques[i].largeur/2, -(briques[i].hauteur/2));
+        /*glTexCoord2f(0,1);*/
+        glVertex2f(-(briques[i].largeur/2), -(briques[i].hauteur/2));
+        break;
+      default:
+        break;
+
+    }
+  }
+  glEnd();
+}

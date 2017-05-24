@@ -7,11 +7,13 @@ typedef enum { vitesse_lent, vitesse_rapide, vie_plus, vie_moins } bonus;
 
 typedef struct _brique{
   struct _point3D position;
-  float largeur;
-  float hauteur;
+  int nb_cotes;
   bonus alteration;
   etat vie;
+  CustomColor color; 
 }Brique;
 
+void init_brique(Brique *b);
+void draw_brique(Brique b, int nb);
 
 #endif
