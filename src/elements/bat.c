@@ -17,7 +17,7 @@
 #include "elements/bat.h"
 
 void init_bat(Bat *bat, Player *p){
-  CustomColor rouge = {255, 50, 0};
+  CustomColor rouge = color(255, 50, 0);
   bat->height = 10;
   bat->length = 30;
   bat->position = pointPlusVector(p->start_position, multVector(p->start_orientation, bat->height/2));

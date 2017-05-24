@@ -17,7 +17,7 @@
 #include "elements/ball.h"
 
 void init_ball(Ball *b, Player *p){
-  CustomColor vert = {100, 200, 0};
+  CustomColor vert = color(100, 200, 0);
   b->player = p;
   b->position = pointPlusVector(b->player->bat->position, multVector(b->player->start_orientation, b->player->bat->height/2+b->diam/2));
   b->diam = 20;

@@ -16,6 +16,14 @@
 static const float PI = 3.1415926535;
 static int SEGMT = 64;
 
+CustomColor color(int r, int g, int b){
+  CustomColor c;
+  c.r = r;
+  c.g = g;
+  c.b = b;
+  return c;
+}
+
 void draw_circle(int full, CustomColor color) {
   float x,y;
   float theta;

@@ -32,12 +32,11 @@ void init_gameboard(Gameboard *board, int nb_players, char *layout_file_path){
   for(i=0; i<nb_players; i++){
     init_player(&(board->players[i]), i);
   }
-  /*remplacer par la procédure avec le fichier layout*/
-  board->nb_bricks = 0;
-  board->bricks = malloc(sizeof(Brick)*board->nb_bricks);
-  if(!board->bricks){
+  board->nb_bricks = get_nb_bricks();
+  board->bricks  = malloc(sizeof(Brick)*board->nb_bricks);
+  if(!board->bricks)
     exit(1);
-  }
+  init_bricks(board->bricks,1, nb_players);
 }
 
 void free_gameboard(Gameboard *board){
@@ -51,19 +50,11 @@ void free_gameboard(Gameboard *board){
 }
 
 void draw_gameboard(Gameboard board){
-  int i;
+    int i;
+  draw_bricks(board.bricks, board.nb_bricks);
   for(i=0; i<board.nb_players; i++){
     draw_ball(*(board.players[i].ball));
     draw_bat(*(board.players[i].bat));
   }
-  /*
-  i=0;
-  while(i<board.nb_bricks){
-    if(board.bricks->status == ON){
-      draw_brick(board.bricks[i]);
-      i++
-    }
-    board.bricks++;
-  }
-  */
+
 }
