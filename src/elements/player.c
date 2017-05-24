@@ -25,8 +25,9 @@ void init_player(Player *p, int id){
   p->bat = malloc(sizeof(Bat));
   if(!p->bat)
     exit(1);
-  init_ball(p->ball);
-  init_bat(p->bat);
+  init_ball(p->ball, p);
+  init_bat(p->bat, p);
+
 }
 
 void free_player(Player *p){

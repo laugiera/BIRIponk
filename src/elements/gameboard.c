@@ -23,14 +23,14 @@ void init_gameboard(Gameboard *board, int nb_players, char *layout_file_path){
   if(!board->players){
     exit(1);
   }
-  for(i=0; i<nb_players; i++){
-    init_player(&(board->players[i]), i);
-  }
   switch(nb_players){
     case 1:
       /*milieu en bas*/
       board->players[0].start_position = pointXY(0,-100);
       board->players[0].start_orientation = normalize(vectorXY(0,1));
+  }
+  for(i=0; i<nb_players; i++){
+    init_player(&(board->players[i]), i);
   }
   /*remplacer par la procédure avec le fichier layout*/
   board->nb_bricks = 0;

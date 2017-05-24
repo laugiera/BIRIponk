@@ -16,12 +16,13 @@
 #include "fonctions.h"
 #include "elements/ball.h"
 
-void init_ball(Ball *b){
+void init_ball(Ball *b, Player *p){
   CustomColor vert = {100, 200, 0};
   b->position = pointXY(0,0);
-  b->diam = 40;
+  b->diam = 20;
   b->color = vert;
-  b->velocity = vectorXY(1,1);
+  b->velocity = p->start_orientation;
+  b->speed = 0.6;
 }
 
 void draw_ball(Ball b){
@@ -33,19 +34,24 @@ void draw_ball(Ball b){
 }
 
 void update_ball_position(Ball *b, Gameboard *gb){
-  b->position = pointPlusVector(b->position, b->velocity);
+
+  Vector3D acceleration = multVector(normalize(b->velocity), b->speed);
+  b->position = pointPlusVector(b->position, addVectors(b->velocity, acceleration));
   ball_check_edges(b);
   ball_check_bat(b, gb);
+  printf("acc: %f\n", norm(acceleration));
 }
 
 void ball_check_edges(Ball *b){
-  if(b->position.x>= 100-b->diam/2 ||
-    b->position.x<= -100+b->diam/2 ||
-    b->position.y>= 100-b->diam/2)
-    {
-      b->velocity = multVector(b->velocity, -1);
+  if(b->position.x>= 100-b->diam/2 || b->position.x<= -100+b->diam/2) {
+      b->velocity.x *= -1;
+      if(b->velocity.x == 0) {b->velocity.x = b->velocity.y;}
     }
-  if(b->position.y<= -100+b->diam/2){b->position.y = -100+b->diam/2;}
+  if(b->position.y>= 100-b->diam/2 || b->position.y<= -100+b->diam/2)
+    {
+      b->velocity.y *= -1;
+    }
+  /*rajouter des sécurité sortie du cadre et bug le long des bords*/
 }
 
 void ball_check_bat(Ball *ball, Gameboard *board) {
@@ -55,9 +61,9 @@ void ball_check_bat(Ball *ball, Gameboard *board) {
     float dist_x = fabs(bat.position.x-ball->position.x)-ball->diam/2;
     float dist_y = fabs(bat.position.y-ball->position.y)-ball->diam/2;
     if(dist_x <= bat.length/2 && dist_y <= bat.height/2){
-      /*float ratio = dist_x/bat.length/2;*/
-      printf("COLLISION\n");
-      ball->velocity = multVector(ball->velocity, -1);
+      float ratio = (ball->position.x-bat.position.x)/bat.length/2;
+      ball->velocity.x = ratio;
+      ball->velocity.y *= -1;
       return;
     }
   }

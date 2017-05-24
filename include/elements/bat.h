@@ -1,6 +1,8 @@
 #ifndef BAT_H_
 #define BAT_H_
 
+#include "elements/gameboard.h"
+
 typedef struct _bat{
   struct _point3D position;
   float length;
@@ -9,9 +11,9 @@ typedef struct _bat{
   struct _vector3D velocity;
 }Bat;
 
-void init_bat(Bat *br);
-void draw_bat(Bat br);
-void update_bat_position(Bat *br, int sens);
+void init_bat(Bat *bat, struct _player *p);
+void draw_bat(Bat bat);
+void update_bat_position(Bat *bat, int sens);
 
 
 #endif

@@ -16,7 +16,7 @@
 #include "fonctions.h"
 #include "elements/bat.h"
 
-void init_bat(Bat *bat){
+void init_bat(Bat *bat, Player *p){
   CustomColor rouge = {255, 50, 0};
   bat->height = 10;
   bat->length = 30;
