@@ -49,7 +49,7 @@ int init_bricks(Brick *bricks, int level, int nb_players){
   float length = (float)200/cols;
   float height = 15.0;
   float W = ((float)-200/2) + ((float)length/2);
-  float H = ((float)rows/2)*((float)height/2);
+  float H = ((float)rows-1)*((float)height/2);
   while(b != EOF){
     b = fgetc(level_file);
     if(b != ' ' && b != '\n' && b != -1){
@@ -81,7 +81,7 @@ int init_bricks(Brick *bricks, int level, int nb_players){
         bricks[i].length = length;
         bricks[i].height = height;
         bricks[i].status = ON;
-        /*printf("W %f H %f de %d\n",W,H,i);*/
+        printf("W %f H %f de %d\n",W,H,i);
         bricks[i].position = pointXY(W,H);
 
         (bricks+i)->nb_vertex = nb_players == 2 ? 4:3; /*rectangle si 2 joueurs, triangles si plus*/
@@ -100,20 +100,22 @@ int init_bricks(Brick *bricks, int level, int nb_players){
 
 void draw_bricks(Brick *bricks, int nb){
   int i;
-  for (i = 0; i < 10; i++) {
+  for (i = 0; i < nb; i++) {
     switch (bricks[i].nb_vertex) {
       case 4:
-        glBegin(GL_POLYGON);
-        glColor3ub(bricks[i].color.r, bricks[i].color.g, bricks[i].color.b);
-        /*glTexCoord2f(0,0);*/
-        glVertex2f(bricks[i].position.x-(bricks[i].length/2), bricks[i].position.y+bricks[i].height/2);
-        /*glTexCoord2f(1,0);*/
-        glVertex2f(bricks[i].position.x+bricks[i].length/2, bricks[i].position.y+bricks[i].height/2);
-        /*glTexCoord2f(1,1);*/
-        glVertex2f(bricks[i].position.x+bricks[i].length/2, bricks[i].position.y-(bricks[i].height/2));
-        /*glTexCoord2f(0,1);*/
-        glVertex2f(bricks[i].position.x-(bricks[i].length/2), bricks[i].position.y-(bricks[i].height/2));
+        if(bricks[i].status == ON){
+          glBegin(GL_POLYGON);
+          glColor3ub(bricks[i].color.r, bricks[i].color.g, bricks[i].color.b);
+          /*glTexCoord2f(0,0);*/
+          glVertex2f(0.5 + bricks[i].position.x-(bricks[i].length/2), -0.5  + bricks[i].position.y+bricks[i].height/2);
+          /*glTexCoord2f(1,0);*/
+          glVertex2f(-0.5 + bricks[i].position.x+bricks[i].length/2, -0.5 + bricks[i].position.y+bricks[i].height/2);
+          /*glTexCoord2f(1,1);*/
+          glVertex2f(-0.5 + bricks[i].position.x+bricks[i].length/2, 0.5 + bricks[i].position.y-(bricks[i].height/2));
+          /*glTexCoord2f(0,1);*/
+          glVertex2f(0.5 + bricks[i].position.x-(bricks[i].length/2), 0.5 + bricks[i].position.y-(bricks[i].height/2));
           glEnd();
+        }
         break;
       default:
         break;
