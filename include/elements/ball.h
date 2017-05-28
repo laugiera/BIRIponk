@@ -18,5 +18,7 @@ void update_ball_position(Ball *b, struct _gameboard *board);
 void ball_check_edges(Ball *b);
 void ball_check_bat(Ball *ball, struct _gameboard *board);
 void ball_check_death(Ball *ball, struct _gameboard *board);
-
+int ball_check_brick(Ball *ball, Brick *brick, Gameboard *board);
+void ball_check_bricks(Ball *ball, Gameboard *board);
+int ball_brick_collision(Ball *ball, Brick *brick, Gameboard *board);
 #endif
