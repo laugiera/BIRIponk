@@ -28,6 +28,17 @@ void init_gameboard(Gameboard *board, int nb_players, char *layout_file_path){
       /*milieu en bas*/
       board->players[0].start_position = pointXY(0,-100);
       board->players[0].start_orientation = normalize(vectorXY(0,1));
+      break;
+    case 2:
+      /*milieu en bas*/
+      board->players[0].start_position = pointXY(0,-100);
+      board->players[0].start_orientation = normalize(vectorXY(0,1));
+      /*milieu en haut*/
+      board->players[1].start_position = pointXY(0,100);
+      board->players[1].start_orientation = normalize(vectorXY(0,-1));
+      break;
+    default:
+      break;
   }
   for(i=0; i<nb_players; i++){
     init_player(&(board->players[i]), i);
@@ -55,6 +66,7 @@ void draw_gameboard(Gameboard board){
   for(i=0; i<board.nb_players; i++){
     draw_ball(*(board.players[i].ball));
     draw_bat(*(board.players[i].bat));
+    draw_life(&board.players[i]);
   }
 
 }

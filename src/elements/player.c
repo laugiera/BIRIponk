@@ -36,10 +36,19 @@ void free_player(Player *p){
   free(p->bat);
 }
 
-/*void draw_life(Player *p){
-
-  glPushMatrix();
-  glTranslatef(bat.position.x, bat.position.y, 0);
-  draw_rectangle(bat.color, bat.height, bat.length);
-  glPopMatrix();
-}*/
+void draw_life(Player *p){
+  int i, taille = 10;
+  Point3D position = p->start_position;
+  if(p->start_orientation.y == -1)
+    position.x -= 100;
+  CustomColor c = color(67,202,112);
+  for(i=0; i<5; i++){
+    position.x += 1.5 * taille;
+    if(i+1 > p->life)
+      c = color(100,107,102);
+    glPushMatrix();
+    glTranslatef(position.x, position.y, 0);
+    draw_rectangle(c, taille,taille);
+    glPopMatrix();
+  }
+}
