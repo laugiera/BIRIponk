@@ -19,11 +19,12 @@
 void init_ball(Ball *b, Player *p){
   CustomColor vert = color(100, 200, 0);
   b->player = p;
-  b->position = pointPlusVector(b->player->bat->position, multVector(b->player->start_orientation, b->player->bat->height/2+b->diam/2));
+  b->position = pointPlusVector(b->player->bat->position, multVector(b->player->start_orientation, b->player->bat->height/2+b->diam/2+1));/*test +1 pour bug décolage*/
   b->diam = 20;
   b->color = vert;
   b->velocity = p->start_orientation;
-  b->speed = 0.6;
+  b->speed = 0;
+  /*b->speed = 0.6;*/
 }
 
 void draw_ball(Ball b){
@@ -35,7 +36,10 @@ void draw_ball(Ball b){
 }
 
 void update_ball_position(Ball *b, Gameboard *gb){
-
+  if(b->speed == 0){
+    resting_ball(b);
+    return;
+  }
   Vector3D acceleration = multVector(normalize(b->velocity), b->speed);
   b->position = pointPlusVector(b->position, addVectors(b->velocity, acceleration));
   ball_check_death(b, gb);
@@ -89,7 +93,8 @@ void ball_check_death(Ball *ball, Gameboard *board){
    if (dist_y <= 0) {
       printf("DEATH\n");
       p->life -= 1.0;
-      ball->position = pointPlusVector(ball->player->bat->position, multVector(ball->player->start_orientation, ball->player->bat->height/2+ball->diam/2));
+      ball->speed = 0;
+      /*resting_ball(b);*/
       /* à garder si on implement le choix de quand commencer la partie
       ball->velocity = vectorXY(0,0);
        */
@@ -132,4 +137,8 @@ int ball_brick_collision(Ball *ball, Brick *brick, Gameboard *board){
   brick->status = OFF;
   /*gestion des bonus*/
   return 1;
+}
+
+void resting_ball(Ball *ball){
+  ball->position = pointPlusVector(ball->player->bat->position, multVector(ball->player->start_orientation, ball->player->bat->height/2+ball->diam/2+1));
 }

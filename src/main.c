@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
 
     /*UPDATE*/
 
-    update_ball_position(gb.players[0].ball, &gb);
+
 
     if ( keystate['q'] )
       update_bat_position(gb.players[0].bat,gauche);
@@ -83,6 +83,10 @@ int main(int argc, char** argv) {
     else if ( keystate[SDLK_RIGHT] )
       update_bat_position(p_haut.bat,droite);
       */
+     else if (keystate['z'] && gb.players[0].ball->speed == 0)
+      gb.players[0].ball->speed = 0.6;
+
+    update_ball_position(gb.players[0].ball, &gb);
 
     /*DESSIN*/
     glClear(GL_COLOR_BUFFER_BIT);
