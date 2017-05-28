@@ -6,6 +6,7 @@ typedef struct _customColor{
   int r,g,b;
 }CustomColor;
 
+CustomColor color(int r, int g, int b); 
 void draw_circle(int full, CustomColor color);
 /*void draw_square(int full, CustomColor color);
 void draw_rounded_square(int full, float radius, CustomColor color);*/

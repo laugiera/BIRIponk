@@ -35,3 +35,11 @@ void free_player(Player *p){
   free(p->ball);
   free(p->bat);
 }
+
+/*void draw_life(Player *p){
+
+  glPushMatrix();
+  glTranslatef(bat.position.x, bat.position.y, 0);
+  draw_rectangle(bat.color, bat.height, bat.length);
+  glPopMatrix();
+}*/

@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
   init_player(&p_haut,2);
   */
  Gameboard gb;
- init_gameboard(&gb,1,"unfilequelquepart");
+ init_gameboard(&gb,2,"unfilequelquepart");
 
   /*TEXTURE*/
   /*SDL_Surface * img = IMG_Load("img/gintama.jpg");
