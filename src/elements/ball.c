@@ -94,10 +94,6 @@ void ball_check_death(Ball *ball, Gameboard *board){
       printf("DEATH\n");
       p->life -= 1.0;
       ball->speed = 0;
-      /*resting_ball(b);*/
-      /* à garder si on implement le choix de quand commencer la partie
-      ball->velocity = vectorXY(0,0);
-       */
       ball->velocity = ball->player->start_orientation;
 
    }

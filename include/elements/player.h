@@ -16,4 +16,5 @@ typedef struct _player{
 void init_player(Player *p, int id);
 void free_player(Player *p);
 
+
 #endif

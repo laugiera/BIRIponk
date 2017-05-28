@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
   init_player(&p_haut,2);
   */
  Gameboard gb;
- init_gameboard(&gb,2,"unfilequelquepart");
+ init_gameboard(&gb,2);
 
   /*TEXTURE*/
   /*SDL_Surface * img = IMG_Load("img/gintama.jpg");
@@ -70,23 +70,8 @@ int main(int argc, char** argv) {
     Uint32 startTime = SDL_GetTicks();
 
     /*UPDATE*/
-
-
-
-    if ( keystate['q'] )
-      update_bat_position(gb.players[0].bat,gauche);
-    else if ( keystate['d'] )
-      update_bat_position(gb.players[0].bat,droite);
-      /*
-    else if ( keystate[SDLK_LEFT]  )
-      update_bat_position(p_haut.bat,gauche);
-    else if ( keystate[SDLK_RIGHT] )
-      update_bat_position(p_haut.bat,droite);
-      */
-     else if (keystate['z'] && gb.players[0].ball->speed == 0)
-      gb.players[0].ball->speed = 0.6;
-
-    update_ball_position(gb.players[0].ball, &gb);
+    int winner = update_gameboard(&gb, keystate);
+    if (winner!= -1) {printf("Le gagnant est le joueur %d !!!\n", winner+1);}
 
     /*DESSIN*/
     glClear(GL_COLOR_BUFFER_BIT);
@@ -154,10 +139,7 @@ int main(int argc, char** argv) {
   for (i = 0; i < nb_textures; i++)
     glBindTexture(GL_TEXTURE_2D,0);
   glDeleteTextures(nb_textures,textures);*/
-  /*
-  free_player(&p_bas);
-  free_player(&p_haut);
-  */
+
   free_gameboard(&gb);
   SDL_Quit();
 
