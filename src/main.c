@@ -18,6 +18,8 @@
 #include "elements/gameboard.h"
 
 int main(int argc, char** argv) {
+
+/*INIT--------------------------------------------------------------------------*/
   if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
     fprintf(stderr, "Impossible d'initialiser la SDL. Fin du programme.\n");
     return EXIT_FAILURE;
@@ -25,99 +27,86 @@ int main(int argc, char** argv) {
   setVideoMode();
   SDL_WM_SetCaption("BIRIPONG", NULL);
 
-  /* depreciated
-  Player p_bas, p_haut;
-  init_player(&p_bas,1);
-  init_player(&p_haut,2);
-  */
- Gameboard gb;
- init_gameboard(&gb,2,"unfilequelquepart");
 
-  /*TEXTURE*/
-  /*SDL_Surface * img = IMG_Load("img/gintama.jpg");
-  int i,nb_textures = 3;
-  GLuint textures[nb_textures];
-  glEnable(GL_TEXTURE_2D);
-  glGenTextures(nb_textures,textures);
-  for (i = 0; i < nb_textures; i++){
-      glBindTexture(GL_TEXTURE_2D,textures[i]);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      GLenum format;
-      switch (img->format->BytesPerPixel) {
-        case 1:
-          format=GL_RED;
-          break;
-        case 3:
-          format = GL_RGB;
-          break;
-        case 4:
-          format = GL_RGBA;
-
-          break;
-        default:
-          fprintf(stderr, "Format des pixels de l’image  non pris en charge\n");
-          return EXIT_FAILURE;
-        }
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img->w, img->h, 0, format, GL_UNSIGNED_BYTE, img->pixels);
-      glBindTexture(GL_TEXTURE_2D,0);
-    }*/
-
-  /*BOUCLE D'AFFICHAGE*/
-  int loop = 1;
+/*MAIN LOOP--------------------------------------------------------------------------*/
+  Gameboard gb;
+  int loop = 1; int mode = end;
+  int nb_players = 0, gameover = false;
+  Point3D mouse = pointXY(-100,-100);
   Uint8 *keystate = SDL_GetKeyState(NULL);
 
   while(loop) {
     Uint32 startTime = SDL_GetTicks();
+    /*START MENU--------------------------------------------------------------------------*/
+    if (mode == start) {
+      glClear(GL_COLOR_BUFFER_BIT);
+       draw_start_screen();
+       SDL_GL_SwapBuffers();
+      /*on compare avec les coord du clic ac ceux du bouton concerné*/
+        if(mouse.x>=-45 && mouse.x<=-30 && mouse.y >=-50 && mouse.y <=-30){
+          printf("GAME PLAYER 1\n" );
+          nb_players = 1;
+          mode = game;
+          mouse = pointXY(-100,-100); /*réinitialise */
+        }
+        else if(mouse.x>=-20 && mouse.x<=-5 && mouse.y >=-50 && mouse.y <=-30){
+          printf("GAME PLAYER 2\n" );
+          nb_players = 2;
+          mode = game;
+          mouse = pointXY(-100,-100); /*réinitialise */
+        }
+        else if(mouse.x>=-50 && mouse.x<=50 && mouse.y >=-10 && mouse.y <=10){
+          printf("RULE\n" );
+          mode = rules;
+          mouse = pointXY(-100,-100); /*réinitialise */
+        }
+        else if(mouse.x>=-50 && mouse.x<=50 && mouse.y >=30 && mouse.y <=50){
+          printf("QUIT\n" );
+          mode = -1;
+        }
+    }
+    /*GAME---------------------------------------------------------------------------------*/
+    else if (mode == game){
+       init_gameboard(&gb,nb_players,"ressources/level.txt");
+      /*UPDATE*/
+      gameover = update_gameboard(&gb, keystate);
+      /*DESSIN*/
+      glClear(GL_COLOR_BUFFER_BIT);
+      draw_gameboard(gb);
+      SDL_GL_SwapBuffers();
+      /* ****** */
+      if(gameover == true)
+        mode = end;
+    }
+    /*ENDING MENU--------------------------------------------------------------------------*/
+    else if (mode == end){
+      glClear(GL_COLOR_BUFFER_BIT);
+      draw_end_screen();
+      SDL_GL_SwapBuffers();
+      if(mouse.x>=-50 && mouse.x<=50 && mouse.y >=-10 && mouse.y <=10){
+        printf("REPLAY\n" );
+        mode = start;
+        mouse = pointXY(-100,-100); /*réinitialise */
+      }
+      else if(mouse.x>=-50 && mouse.x<=50 && mouse.y >=30 && mouse.y <=50){
+        printf("QUIT\n" );
+        mode = -1;
+      }
+    }
+    /*RULES MENU--------------------------------------------------------------------------*/
+    else if (mode == rules){
+      glClear(GL_COLOR_BUFFER_BIT);
+      draw_rules_screen();
+      SDL_GL_SwapBuffers();
+      if(mouse.x>=-5 && mouse.x<=95 && mouse.y >=-95 && mouse.y <=-75){
+        printf("ok button\n" );
+        mode = start;
+      }
+    }
+    else if (mode == -1)
+      loop = false;
 
-    /*UPDATE*/
-
-    update_ball_position(gb.players[0].ball, &gb);
-
-    if ( keystate['q'] )
-      update_bat_position(gb.players[0].bat,gauche);
-    else if ( keystate['d'] )
-      update_bat_position(gb.players[0].bat,droite);
-      /*
-    else if ( keystate[SDLK_LEFT]  )
-      update_bat_position(p_haut.bat,gauche);
-    else if ( keystate[SDLK_RIGHT] )
-      update_bat_position(p_haut.bat,droite);
-      */
-
-    /*DESSIN*/
-    glClear(GL_COLOR_BUFFER_BIT);
-    /*
-    glPushMatrix();
-    glScalef(60,60,0);
-
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0, 1.0, 1.0, 1.0);
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(0,0);     glVertex2f(1, 1);
-    glTexCoord2f(0,1);    glVertex2f(1, -1);
-    glTexCoord2f(1,1);    glVertex2f(-1, -1);
-    glTexCoord2f(1,0);    glVertex2f(-1, 1);
-    glEnd();
-
-    glPopMatrix();*/
-    /* affichage pour les textures
-    glBindTexture(GL_TEXTURE_2D, textures[1]);
-    draw_ball(*gb.players[0].ball);
-    glBindTexture(GL_TEXTURE_2D, textures[2]);
-    draw_bat(*gb.players[0].bat);
-    */
-
-    /* affichage sans les textures, il faudrait pouvoir adapter les textures à ça
-    surement que passer le tableau de textures en paramètres suffit mais dans le doute je touche pas
-    */
-    draw_gameboard(gb);
-
-    /*glDisable(GL_TEXTURE_2D);*/
-
-    SDL_GL_SwapBuffers();
-    /* ****** */
-
+    /*EVENTS--------------------------------------------------------------------------*/
     SDL_Event e;
     while(SDL_PollEvent(&e)) {
       switch(e.type) {
@@ -133,6 +122,12 @@ int main(int argc, char** argv) {
               break;
           }
           break;
+        case SDL_MOUSEBUTTONDOWN:
+        mouse.x = (-1.0 + 2.0 *(float)e.button.x/WINDOW_WIDTH)*100;
+        mouse.y = (-1.0 + 2.0 *(float)e.button.y/WINDOW_HEIGHT)*100;
+
+          printf("%f %f\n",mouse.x,mouse.y );
+          break;
         default:
           break;
       }
@@ -144,17 +139,8 @@ int main(int argc, char** argv) {
     }
   }
 
-  /*FREE*/
-
-  /*SDL_FreeSurface(img);
-  for (i = 0; i < nb_textures; i++)
-    glBindTexture(GL_TEXTURE_2D,0);
-  glDeleteTextures(nb_textures,textures);*/
-  /*
-  free_player(&p_bas);
-  free_player(&p_haut);
-  */
-  free_gameboard(&gb);
+/*FREE--------------------------------------------------------------------------*/
+  if(nb_players != 0) free_gameboard(&gb);
   SDL_Quit();
 
   return EXIT_SUCCESS;

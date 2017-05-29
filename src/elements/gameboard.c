@@ -43,15 +43,14 @@ void init_gameboard(Gameboard *board, int nb_players, char *layout_file_path){
   for(i=0; i<nb_players; i++){
     init_player(&(board->players[i]), i);
   }
-  board->nb_bricks = get_nb_bricks();
+  board->nb_bricks = get_nb_bricks(layout_file_path);
   board->bricks  = malloc(sizeof(Brick)*board->nb_bricks);
   if(!board->bricks)
     exit(1);
-  init_bricks(board->bricks,1, nb_players);
+  init_bricks(board->bricks,1, nb_players, layout_file_path);
 }
 
 void free_gameboard(Gameboard *board){
-
   int i;
   for(i=0; i<board->nb_players; i++){
     free_player(&(board->players[i]));
@@ -69,4 +68,72 @@ void draw_gameboard(Gameboard board){
     draw_life(&board.players[i]);
   }
 
+}
+
+int update_gameboard(Gameboard *gb,Uint8 *keystate){
+  return 0;
+}
+
+void draw_start_screen(){
+  CustomColor c = color(255,255,225);
+  /*background*/
+  draw_rectangle(c,200,200);
+
+  c = color(255,0,50);
+  /*choixnb joueurs*/
+  glPushMatrix();
+  glTranslatef(-36,40,0);
+  draw_rectangle(c,20,15);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(-12,40,0);
+  draw_rectangle(c,20,15);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(12,40,0);
+  draw_rectangle(c,20,15);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(36,40,0);
+  draw_rectangle(c,20,15);
+  glPopMatrix();
+
+  /*brules button*/
+  draw_rectangle(c,20,100);
+
+  /*quit button*/
+  glPushMatrix();
+  glTranslatef(0, -40,0);
+  draw_rectangle(c,20,100);
+  glPopMatrix();
+}
+
+void draw_rules_screen(){
+  CustomColor c = color(255,255,225);
+  /*background*/
+  draw_rectangle(c,200,200);
+  /*quit button*/
+  c = color(255,0,50);
+  glPushMatrix();
+  glTranslatef(45,85,0);
+  draw_rectangle(c,20,100);
+  glPopMatrix();
+  c = color(255,0,50);
+}
+void draw_end_screen(){
+  CustomColor c = color(255,255,225);
+  /*background*/
+  draw_rectangle(c,200,200);
+
+  c = color(255,0,50);
+  /*replay button*/
+  draw_rectangle(c,20,100);
+  /*quit button*/
+  glPushMatrix();
+  glTranslatef(0, -40,0);
+  draw_rectangle(c,20,100);
+  glPopMatrix();
 }

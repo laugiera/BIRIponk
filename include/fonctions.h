@@ -6,6 +6,8 @@ typedef enum { false, true } bool;
 
 typedef enum { bas, droite, haut, gauche } sens;
 
+typedef enum { start, game, end, rules } mode;
+
 #define WINDOW_WIDTH  800
 #define WINDOW_HEIGHT  800
 #define BIT_PER_PIXEL  32

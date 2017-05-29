@@ -16,13 +16,11 @@
 #include "fonctions.h"
 #include "elements/brick.h"
 
-int get_nb_bricks(){
+int get_nb_bricks(char *layout_file_path){
   /*charge le fichier de briques*/
   FILE * level_file = NULL;
 
-  char * name =  "ressources/level.txt";
-
-  level_file = fopen(name,"r+");
+  level_file = fopen(layout_file_path,"r+");
   if(level_file == NULL)
     exit(1);
 
@@ -32,13 +30,11 @@ int get_nb_bricks(){
   return rows*cols;
 }
 
-int init_bricks(Brick *bricks, int level, int nb_players){
+int init_bricks(Brick *bricks, int level, int nb_players, char *layout_file_path){
   /*charge le fichier de briques*/
   FILE * level_file = NULL;
 
-  char * name =  "ressources/level.txt";
-
-  level_file = fopen(name,"r+");
+  level_file = fopen(layout_file_path,"r+");
   if(level_file == NULL)
     exit(1);
 
