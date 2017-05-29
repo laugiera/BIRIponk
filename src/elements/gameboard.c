@@ -16,7 +16,7 @@
 #include "fonctions.h"
 #include "elements/gameboard.h"
 
-void init_gameboard(Gameboard *board, int nb_players){
+void init_gameboard(Gameboard *board, int nb_players, char * layout_file_path){
   int i;
   board->nb_players = nb_players; /*max à définir*/
   board->players = malloc(sizeof(Player)*nb_players);

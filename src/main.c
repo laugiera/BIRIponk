@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 
 /*MAIN LOOP--------------------------------------------------------------------------*/
   Gameboard gb;
-  int loop = 1; int mode = end;
+  int loop = 1; int mode = start;
   int nb_players = 0, gameover = false;
   Point3D mouse = pointXY(-100,-100);
   Uint8 *keystate = SDL_GetKeyState(NULL);

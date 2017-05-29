@@ -11,7 +11,7 @@ typedef struct _gameboard{
   struct _brick *bricks;
 }Gameboard;
 
-void init_gameboard(Gameboard *gb, int nb_players);
+void init_gameboard(Gameboard *gb, int nb_players,char * layout_file_path);
 void free_gameboard(Gameboard *gameboard);
 void draw_gameboard(Gameboard board);
 void draw_start_screen();
