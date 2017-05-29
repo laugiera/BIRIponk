@@ -54,6 +54,7 @@ void update_ball_position(Ball *b, Gameboard *board){
 }
 
 void ball_check_edges(Ball *b){
+  /*
   if(b->position.x>= 100-b->diam/2 || b->position.x<= -100+b->diam/2) {
       b->velocity.x *= -1;
       if(b->velocity.x == 0) {b->velocity.x = b->velocity.y;}
@@ -62,7 +63,24 @@ void ball_check_edges(Ball *b){
     {
       b->velocity.y *= -1;
     }
+  */
   /*rajouter des sécurité sortie du cadre et bug le long des bords*/
+  if(b->position.x>= 100-b->diam/2){
+    b->velocity.x *= -1;
+    b->position.x = 100-b->diam/2-1;
+    if(b->velocity.x == 0) {b->velocity.x = b->velocity.y;}
+  } else if (b->position.x<= -100+b->diam/2) {
+    b->velocity.x *= -1;
+    b->position.x = -100+b->diam/2+1;
+    if(b->velocity.x == 0) {b->velocity.x = b->velocity.y;}
+  }
+  if(b->position.y>= 100-b->diam/2){
+    b->velocity.y *= -1;
+    b->position.y = 100-b->diam/2-1;
+  } else if (b->position.y<= -100+b->diam/2){
+    b->velocity.y *= -1;
+    b->position.y = -100+b->diam/2+1;
+  }
 }
 
 void ball_check_bat(Ball *ball, Gameboard *board) {
