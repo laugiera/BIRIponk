@@ -70,10 +70,6 @@ void draw_gameboard(Gameboard board){
 
 }
 
-int update_gameboard(Gameboard *gb,Uint8 *keystate){
-  return 0;
-}
-
 void draw_start_screen(){
   CustomColor c = color(255,255,225);
   /*background*/
