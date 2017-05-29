@@ -16,7 +16,7 @@
 #include "fonctions.h"
 #include "elements/gameboard.h"
 
-void init_gameboard(Gameboard *board, int nb_players, char *layout_file_path){
+void init_gameboard(Gameboard *board, int nb_players){
   int i;
   board->nb_players = nb_players; /*max à définir*/
   board->players = malloc(sizeof(Player)*nb_players);
@@ -68,5 +68,39 @@ void draw_gameboard(Gameboard board){
     draw_bat(*(board.players[i].bat));
     draw_life(&board.players[i]);
   }
+}
 
+int update_gameboard(Gameboard *board, Uint8 *keystate){
+  /*Player 1*/
+  if ( keystate[SDLK_LEFT]  )
+    update_bat_position(board->players[0].bat,gauche);
+  else if ( keystate[SDLK_RIGHT] )
+    update_bat_position(board->players[0].bat,droite);
+  else if (keystate[SDLK_UP] && board->players[0].ball->speed == 0)
+    board->players[0].ball->speed = 0.6;
+  update_ball_position(board->players[0].ball, board);
+
+  if(board->nb_players >= 2){
+  /*Player 2*/
+    if ( keystate['q'] )
+      update_bat_position(board->players[1].bat,gauche);
+    else if ( keystate['d'] )
+      update_bat_position(board->players[1].bat,droite);
+    else if (keystate['z'] && board->players[1].ball->speed == 0)
+      board->players[1].ball->speed = 0.6;
+    update_ball_position(board->players[1].ball, board);
+  }
+
+  return winner(board);
+}
+
+int winner(Gameboard *board){
+  int i, count=0, winner;
+  for(i=0; i<board->nb_players; i++){
+    if(board->players[i].life >0){
+      winner = i;
+      ++ count;
+    }
+  }
+  return (count == 1)? winner: -1;
 }

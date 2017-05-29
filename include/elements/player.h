@@ -17,4 +17,5 @@ void init_player(Player *p, int id);
 void free_player(Player *p);
 void draw_life(Player *p);
 
+
 #endif
