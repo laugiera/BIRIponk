@@ -50,7 +50,6 @@ void update_ball_position(Ball *b, Gameboard *board){
   } else {
     printf("nb bricks =0\n");
   }
-
 }
 
 void ball_check_edges(Ball *b){
@@ -82,6 +81,7 @@ void ball_check_bat(Ball *ball, Gameboard *board) {
       float ratio = (ball->position.x-bat.position.x)/bat.length/2;
       ball->velocity.x = ratio;
       ball->velocity.y *= -1;
+      ball->position.y += board->players[i].start_orientation.y*1;
       return;
     }
   }
