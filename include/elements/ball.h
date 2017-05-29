@@ -20,6 +20,6 @@ void ball_check_bat(Ball *ball, struct _gameboard *board);
 void ball_check_death(Ball *ball, struct _gameboard *board);
 int ball_check_brick(Ball *ball, struct _brick *brick, struct _gameboard *board);
 void ball_check_bricks(Ball *ball, struct _gameboard *board);
-int ball_brick_collision(Ball *ball, struct _brick *brick, struct _gameboard *board);
+int ball_brick_collision(Ball *ball, struct _brick *brick);
 void resting_ball(Ball *ball);
 #endif

@@ -54,17 +54,6 @@ void update_ball_position(Ball *b, Gameboard *board){
 }
 
 void ball_check_edges(Ball *b){
-  /*
-  if(b->position.x>= 100-b->diam/2 || b->position.x<= -100+b->diam/2) {
-      b->velocity.x *= -1;
-      if(b->velocity.x == 0) {b->velocity.x = b->velocity.y;}
-    }
-  if(b->position.y>= 100-b->diam/2 || b->position.y<= -100+b->diam/2)
-    {
-      b->velocity.y *= -1;
-    }
-  */
-  /*rajouter des sécurité sortie du cadre et bug le long des bords*/
   if(b->position.x>= 100-b->diam/2){
     b->velocity.x *= -1;
     b->position.x = 100-b->diam/2-1;
@@ -115,6 +104,7 @@ void ball_check_death(Ball *ball, Gameboard *board){
    if (dist_y <= 0) {
       printf("DEATH\n");
       p->life -= 1.0;
+      /*retour aux réglages de base*/
       ball->speed = 0;
       ball->velocity = ball->player->start_orientation;
 
@@ -133,7 +123,7 @@ int ball_check_brick(Ball *ball, Brick *brick, Gameboard *board) {
     } else {
       ball->velocity = multVector(ball->velocity, -1);
     }
-    return ball_brick_collision(ball, brick, board);
+    return ball_brick_collision(ball, brick);
   }
   return 0;
 }
@@ -152,9 +142,21 @@ void ball_check_bricks(Ball *ball, Gameboard *board){
   if(count == 0){board->nb_bricks = 0;}
 }
 
-int ball_brick_collision(Ball *ball, Brick *brick, Gameboard *board){
+int ball_brick_collision(Ball *ball, Brick *brick){
   brick->status = OFF;
   /*gestion des bonus*/
+  if(brick->type == ball_speed_slow){
+    ball->speed /= 5;
+  }
+  else if (brick->type == ball_speed_fast){
+    ball->speed *= 5;
+  }
+  else if (brick->type == life_bonus){
+    ++ ball->player->life;
+  }
+  else if (brick->type == life_malus){
+    -- ball->player->life;
+  }
   return 1;
 }
 
