@@ -35,17 +35,21 @@ void draw_ball(Ball b){
   glPopMatrix();
 }
 
-void update_ball_position(Ball *b, Gameboard *gb){
+void update_ball_position(Ball *b, Gameboard *board){
   if(b->speed == 0){
     resting_ball(b);
     return;
   }
   Vector3D acceleration = multVector(normalize(b->velocity), b->speed);
   b->position = pointPlusVector(b->position, addVectors(b->velocity, acceleration));
-  ball_check_death(b, gb);
+  ball_check_death(b, board);
   ball_check_edges(b);
-  ball_check_bat(b, gb);
-  ball_check_bricks(b, gb);
+  ball_check_bat(b, board);
+  if(board->nb_bricks){
+    ball_check_bricks(b, board);
+  } else {
+    printf("nb bricks =0\n");
+  }
 
 }
 
@@ -101,32 +105,33 @@ void ball_check_death(Ball *ball, Gameboard *board){
 }
 
 int ball_check_brick(Ball *ball, Brick *brick, Gameboard *board) {
-    float dist_x = fabs(brick->position.x-ball->position.x)-ball->diam/2;
-    float dist_y = fabs(brick->position.y-ball->position.y)-ball->diam/2;
-
-    if((int)dist_x == (int)brick->length/2 && (int)dist_y == (int)brick->height/2){
-      ball->velocity = multVector(ball->velocity, -1);
-      return ball_brick_collision(ball, brick, board);
-    } else if ((int)dist_x == (int)brick->length/2 && dist_y < brick->height/2) {
-      ball->velocity.x *= -1;
-      return ball_brick_collision(ball, brick, board);
-    } else if (dist_x < brick->length/2 && (int)dist_y == (int)brick->height/2) {
+  float dist_x = fabs(brick->position.x-ball->position.x)-ball->diam/2;
+  float dist_y = fabs(brick->position.y-ball->position.y)-ball->diam/2;
+  if(dist_x <= brick->length/2 && dist_y <= brick->height/2){
+    if(dist_x/(brick->length/2) < dist_y/(brick->height/2)) {
       ball->velocity.y *= -1;
-      return ball_brick_collision(ball, brick, board);
+    } else if (dist_x/(brick->length/2) > dist_y/(brick->height/2)) {
+      ball->velocity.x *= -1;
+    } else {
+      ball->velocity = multVector(ball->velocity, -1);
     }
+    return ball_brick_collision(ball, brick, board);
+  }
   return 0;
 }
 
 void ball_check_bricks(Ball *ball, Gameboard *board){
-  int i;
-  /*changer pour optimiser en fct du nb de bricks*/
+  int i, count = 0;
   for(i=0; i<board->nb_bricks; i++){
     if(board->bricks[i].status == ON){
+      ++ count;
       if(ball_check_brick(ball, &(board->bricks[i]), board)){
-        printf("check brick\n");
+        /*empeche les doubles casses*/
+        break;
       }
     }
   }
+  if(count == 0){board->nb_bricks = 0;}
 }
 
 int ball_brick_collision(Ball *ball, Brick *brick, Gameboard *board){
