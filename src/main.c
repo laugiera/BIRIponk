@@ -27,7 +27,6 @@ int main(int argc, char** argv) {
   setVideoMode();
   SDL_WM_SetCaption("BIRIPONG", NULL);
 
-
 /*MAIN LOOP--------------------------------------------------------------------------*/
   Gameboard gb;
   int loop = 1; int mode = end;
@@ -75,6 +74,9 @@ int main(int argc, char** argv) {
       draw_gameboard(gb);
       SDL_GL_SwapBuffers();
       /* ****** */
+      /*UPDATE*/
+      int winner = update_gameboard(&gb, keystate);
+      if (winner!= -1) {printf("Le gagnant est le joueur %d !!!\n", winner+1);}
       if(gameover == true)
         mode = end;
     }
@@ -106,7 +108,7 @@ int main(int argc, char** argv) {
     else if (mode == -1)
       loop = false;
 
-    /*EVENTS--------------------------------------------------------------------------*/
+
     SDL_Event e;
     while(SDL_PollEvent(&e)) {
       switch(e.type) {
