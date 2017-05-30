@@ -80,7 +80,7 @@ int init_bricks(Brick *bricks, int level, int nb_players, char *layout_file_path
         printf("W %f H %f de %d\n",W,H,i);
         bricks[i].position = pointXY(W,H);
 
-        (bricks+i)->nb_vertex = nb_players == 2 ? 4:3; /*rectangle si 2 joueurs, triangles si plus*/
+        (bricks+i)->nb_vertex = nb_players <= 2 ? 4:3; /*rectangle si 2 joueurs, triangles si plus*/
         if(W+length >= 200/2){
           W = ((float)-200/2) + ((float)length/2);
           H -= height;

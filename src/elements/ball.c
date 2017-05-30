@@ -152,7 +152,9 @@ int ball_brick_collision(Ball *ball, Brick *brick){
     ball->speed *= 5;
   }
   else if (brick->type == life_bonus){
-    ++ ball->player->life;
+    if (ball->player->life <5){
+      ++ ball->player->life;
+    }
   }
   else if (brick->type == life_malus){
     -- ball->player->life;

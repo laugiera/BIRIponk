@@ -95,13 +95,19 @@ int update_gameboard(Gameboard *board, Uint8 *keystate){
 
 int winner(Gameboard *board){
   int i, count=0, winner;
-  for(i=0; i<board->nb_players; i++){
-    if(board->players[i].life >0){
-      winner = i;
-      ++ count;
-    }
+  if (board->nb_players == 1){
+    return (board->players[0].life <= 0)? 0 : -1;
   }
-  return (count == 1)? winner: -1;
+  else {
+    for(i=0; i<board->nb_players; i++){
+      if(board->players[i].life >0){
+        winner = i;
+        ++ count;
+      }
+    }
+    return (count == 1)? winner: -1;
+  }
+
 }
 
 void draw_start_screen(){

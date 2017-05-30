@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 /*MAIN LOOP--------------------------------------------------------------------------*/
   Gameboard gb;
   int loop = 1; int mode = start;
-  int nb_players = 0, gameover = false;
+  int nb_players = 0;
   Point3D mouse = pointXY(-100,-100);
   Uint8 *keystate = SDL_GetKeyState(NULL);
 
@@ -46,12 +46,14 @@ int main(int argc, char** argv) {
           printf("GAME PLAYER 1\n" );
           nb_players = 1;
           mode = game;
+          init_gameboard(&gb,nb_players,"ressources/level.txt");
           mouse = pointXY(-100,-100); /*réinitialise */
         }
         else if(mouse.x>=-20 && mouse.x<=-5 && mouse.y >=-50 && mouse.y <=-30){
           printf("GAME PLAYER 2\n" );
           nb_players = 2;
           mode = game;
+          init_gameboard(&gb,nb_players,"ressources/level.txt");
           mouse = pointXY(-100,-100); /*réinitialise */
         }
         else if(mouse.x>=-50 && mouse.x<=50 && mouse.y >=-10 && mouse.y <=10){
@@ -66,19 +68,18 @@ int main(int argc, char** argv) {
     }
     /*GAME---------------------------------------------------------------------------------*/
     else if (mode == game){
-       init_gameboard(&gb,nb_players,"ressources/level.txt");
+
       /*UPDATE*/
-      gameover = update_gameboard(&gb, keystate);
+      int winner = update_gameboard(&gb, keystate);
       /*DESSIN*/
       glClear(GL_COLOR_BUFFER_BIT);
       draw_gameboard(gb);
       SDL_GL_SwapBuffers();
       /* ****** */
-      /*UPDATE*/
-      int winner = update_gameboard(&gb, keystate);
-      if (winner!= -1) {printf("Le gagnant est le joueur %d !!!\n", winner+1);}
-      if(gameover == true)
+      if (winner!= -1) {
+        printf("Le gagnant est le joueur %d !!!\n", winner+1);
         mode = end;
+      }
     }
     /*ENDING MENU--------------------------------------------------------------------------*/
     else if (mode == end){
