@@ -8,6 +8,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <SDL/SDL_image.h>
+#include <SDL/SDL_mixer.h>
 #elif defined __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -26,6 +27,9 @@ int main(int argc, char** argv) {
   }
   setVideoMode();
   SDL_WM_SetCaption("BIRIPONG", NULL);
+  if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1)
+    printf("%s", Mix_GetError());
+
 
 /*MAIN LOOP--------------------------------------------------------------------------*/
   Gameboard gb;
@@ -33,13 +37,24 @@ int main(int argc, char** argv) {
   int nb_players = 0;
   Point3D mouse = pointXY(-100,-100);
   Uint8 *keystate = SDL_GetKeyState(NULL);
+  /*TEXTURES*/
+  int nb_textures = 17;
+  SDL_Surface * images[nb_textures];
+  GLuint textures[nb_textures];
+  load_images(images);
+  init_textures(images, nb_textures, textures);
+
+  Mix_Music *musique;
+  musique = Mix_LoadMUS("ressources/musique.mp3");
+  Mix_PlayMusic(musique, -1);
+  Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
 
   while(loop) {
     Uint32 startTime = SDL_GetTicks();
     /*START MENU--------------------------------------------------------------------------*/
     if (mode == start) {
       glClear(GL_COLOR_BUFFER_BIT);
-       draw_start_screen();
+       draw_start_screen(textures);
        SDL_GL_SwapBuffers();
       /*on compare avec les coord du clic ac ceux du bouton concerné*/
         if(mouse.x>=-45 && mouse.x<=-30 && mouse.y >=-50 && mouse.y <=-30){
@@ -73,7 +88,7 @@ int main(int argc, char** argv) {
       int winner = update_gameboard(&gb, keystate);
       /*DESSIN*/
       glClear(GL_COLOR_BUFFER_BIT);
-      draw_gameboard(gb);
+      draw_gameboard(gb, textures);
       SDL_GL_SwapBuffers();
       /* ****** */
       if (winner!= -1) {
@@ -84,25 +99,22 @@ int main(int argc, char** argv) {
     /*ENDING MENU--------------------------------------------------------------------------*/
     else if (mode == end){
       glClear(GL_COLOR_BUFFER_BIT);
-      draw_end_screen();
+      draw_end_screen(textures);
       SDL_GL_SwapBuffers();
       if(mouse.x>=-50 && mouse.x<=50 && mouse.y >=-10 && mouse.y <=10){
-        printf("REPLAY\n" );
         mode = start;
         mouse = pointXY(-100,-100); /*réinitialise */
       }
       else if(mouse.x>=-50 && mouse.x<=50 && mouse.y >=30 && mouse.y <=50){
-        printf("QUIT\n" );
         mode = -1;
       }
     }
     /*RULES MENU--------------------------------------------------------------------------*/
     else if (mode == rules){
       glClear(GL_COLOR_BUFFER_BIT);
-      draw_rules_screen();
+      draw_rules_screen(textures);
       SDL_GL_SwapBuffers();
       if(mouse.x>=-5 && mouse.x<=95 && mouse.y >=-95 && mouse.y <=-75){
-        printf("ok button\n" );
         mode = start;
       }
     }
@@ -144,6 +156,9 @@ int main(int argc, char** argv) {
 
 /*FREE--------------------------------------------------------------------------*/
   if(nb_players != 0) free_gameboard(&gb);
+  free_textures(images, nb_textures, textures);
+  Mix_FreeMusic(musique);
+  Mix_CloseAudio();
   SDL_Quit();
 
   return EXIT_SUCCESS;

@@ -7,6 +7,7 @@
 #if defined __linux
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <SDL/SDL_image.h>
 #elif defined __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -17,11 +18,10 @@
 #include "elements/bat.h"
 
 void init_bat(Bat *bat, Player *p){
-  CustomColor rouge = color(255, 50, 0);
-  bat->height = 10;
-  bat->length = 30;
+  bat->height = 8;
+  bat->length = 25;
   bat->position = pointPlusVector(p->start_position, multVector(p->start_orientation, bat->height/2));
-  bat->color = rouge;
+  bat->color = p->color;
   bat->velocity = vectorXY(1,1);
 }
 

@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -ansi
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-	LDFLAGS = -lSDL -lGLU -lGL -lm -lSDL_image
+	LDFLAGS = -lSDL -lGLU -lGL -lm -lSDL_image -lSDL_mixer
 endif
 ifeq ($(UNAME_S),Darwin)
 	LDFLAGS= -framework OpenGL -framework Cocoa -lm -lSDL -lSDLmain -framework SDL

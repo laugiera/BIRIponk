@@ -7,6 +7,7 @@
 #if defined __linux
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <SDL/SDL_image.h>
 #elif defined __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -43,7 +44,7 @@ int init_bricks(Brick *bricks, int level, int nb_players, char *layout_file_path
   int nb_bricks = rows*cols;
   int i = 0;
   float length = (float)200/cols;
-  float height = 15.0;
+  float height = (float)length/2;
   float W = ((float)-200/2) + ((float)length/2);
   float H = ((float)rows-1)*((float)height/2);
   while(b != EOF){
@@ -94,23 +95,48 @@ int init_bricks(Brick *bricks, int level, int nb_players, char *layout_file_path
   return nb_bricks;
 }
 
-void draw_bricks(Brick *bricks, int nb){
+void draw_bricks(Brick *bricks, int nb, GLuint * textures){
   int i;
   for (i = 0; i < nb; i++) {
     switch (bricks[i].nb_vertex) {
       case 4:
         if(bricks[i].status == ON){
+          glEnable(GL_TEXTURE_2D);
+          glColor4f(1.0, 1.0, 1.0, 1.0);
+          switch (bricks[i].type) {
+            case brick_normal:
+                  glBindTexture(GL_TEXTURE_2D, textures[brick_normal]);
+                  break;
+            case brick_bo_1 :
+                  glBindTexture(GL_TEXTURE_2D, textures[brick_bo_1]);
+                  break;
+            case brick_bo_2 :
+                  glBindTexture(GL_TEXTURE_2D, textures[brick_bo_2]);
+                  break;
+            case brick_ma_1 :
+                  glBindTexture(GL_TEXTURE_2D, textures[brick_ma_1]);
+                  break;
+            case brick_ma_2 :
+                  glBindTexture(GL_TEXTURE_2D, textures[brick_ma_2]);
+                  break;
+            default:
+                  glBindTexture(GL_TEXTURE_2D, textures[brick_normal]);
+                  break;
+          }
+
           glBegin(GL_POLYGON);
-          glColor3ub(bricks[i].color.r, bricks[i].color.g, bricks[i].color.b);
-          /*glTexCoord2f(0,0);*/
+          /*glColor3ub(bricks[i].color.r, bricks[i].color.g, bricks[i].color.b);*/
+          glTexCoord2f(0,0);
           glVertex2f(0.5 + bricks[i].position.x-(bricks[i].length/2), -0.5  + bricks[i].position.y+bricks[i].height/2);
-          /*glTexCoord2f(1,0);*/
+          glTexCoord2f(1,0);
           glVertex2f(-0.5 + bricks[i].position.x+bricks[i].length/2, -0.5 + bricks[i].position.y+bricks[i].height/2);
-          /*glTexCoord2f(1,1);*/
+          glTexCoord2f(1,1);
           glVertex2f(-0.5 + bricks[i].position.x+bricks[i].length/2, 0.5 + bricks[i].position.y-(bricks[i].height/2));
-          /*glTexCoord2f(0,1);*/
+          glTexCoord2f(0,1);
           glVertex2f(0.5 + bricks[i].position.x-(bricks[i].length/2), 0.5 + bricks[i].position.y-(bricks[i].height/2));
           glEnd();
+
+          glDisable(GL_TEXTURE_2D);
         }
         break;
       default:

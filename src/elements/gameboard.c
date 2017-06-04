@@ -7,6 +7,8 @@
 #if defined __linux
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <SDL/SDL_image.h>
+#include <SDL/SDL_mixer.h>
 #elif defined __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -40,8 +42,12 @@ void init_gameboard(Gameboard *board, int nb_players, char * layout_file_path){
     default:
       break;
   }
+  CustomColor c =color(69,142,206);
   for(i=0; i<nb_players; i++){
-    init_player(&(board->players[i]), i);
+    c.g = (c.g+30)%255;
+    c.r = (c.r+30)%255;
+    c.b = (c.b+30)%255;
+    init_player(&(board->players[i]), i, c);
   }
   board->nb_bricks = get_nb_bricks(layout_file_path);
   board->bricks  = malloc(sizeof(Brick)*board->nb_bricks);
@@ -59,14 +65,21 @@ void free_gameboard(Gameboard *board){
   free(board->bricks);
 }
 
-void draw_gameboard(Gameboard board){
-    int i;
-  draw_bricks(board.bricks, board.nb_bricks);
+void draw_gameboard(Gameboard board, GLuint * textures){
+  glEnable(GL_TEXTURE_2D);
+  glColor4f(1.0, 1.0, 1.0, 1.0);
+  CustomColor c = color(255,255,225);
+  glBindTexture(GL_TEXTURE_2D, textures[background]);
+  draw_rectangle(c,200,200);
+  int i;
+  draw_bricks(board.bricks, board.nb_bricks, textures);
   for(i=0; i<board.nb_players; i++){
     draw_ball(*(board.players[i].ball));
     draw_bat(*(board.players[i].bat));
     draw_life(&board.players[i]);
   }
+
+    glDisable(GL_TEXTURE_2D);
 }
 
 int update_gameboard(Gameboard *board, Uint8 *keystate){
@@ -81,11 +94,11 @@ int update_gameboard(Gameboard *board, Uint8 *keystate){
 
   if(board->nb_players >= 2){
   /*Player 2*/
-    if ( keystate['q'] )
+    if ( keystate['a'] )
       update_bat_position(board->players[1].bat,gauche);
-    else if ( keystate['d'] )
+    else if ( keystate['z'] )
       update_bat_position(board->players[1].bat,droite);
-    else if (keystate['z'] && board->players[1].ball->speed == 0)
+    else if (keystate['s'] && board->players[1].ball->speed == 0)
       board->players[1].ball->speed = 0.6;
     update_ball_position(board->players[1].ball, board);
   }
@@ -110,66 +123,92 @@ int winner(Gameboard *board){
 
 }
 
-void draw_start_screen(){
+void draw_start_screen(GLuint * textures){
+  glEnable(GL_TEXTURE_2D);
+  glColor4f(1.0, 1.0, 1.0, 1.0);
+
   CustomColor c = color(255,255,225);
   /*background*/
+  glBindTexture(GL_TEXTURE_2D, textures[start_screen]);
   draw_rectangle(c,200,200);
-
-  c = color(255,0,50);
+  glBindTexture(GL_TEXTURE_2D, 0);
   /*choixnb joueurs*/
+  glBindTexture(GL_TEXTURE_2D, textures[button_1p]);
   glPushMatrix();
   glTranslatef(-36,40,0);
   draw_rectangle(c,20,15);
   glPopMatrix();
-
+  glBindTexture(GL_TEXTURE_2D, 0);
+  /*choixnb joueurs*/
+  glBindTexture(GL_TEXTURE_2D, textures[button_2p]);
   glPushMatrix();
   glTranslatef(-12,40,0);
   draw_rectangle(c,20,15);
   glPopMatrix();
-
+  glBindTexture(GL_TEXTURE_2D, 0);
+  /*choixnb joueurs*/
+  glBindTexture(GL_TEXTURE_2D, textures[button_3p]);
   glPushMatrix();
   glTranslatef(12,40,0);
   draw_rectangle(c,20,15);
   glPopMatrix();
-
+  glBindTexture(GL_TEXTURE_2D, 0);
+  /*choixnb joueurs*/
+  glBindTexture(GL_TEXTURE_2D, textures[button_4p]);
   glPushMatrix();
   glTranslatef(36,40,0);
   draw_rectangle(c,20,15);
   glPopMatrix();
-
-  /*brules button*/
+  glBindTexture(GL_TEXTURE_2D, 0);
+  /*rules button*/
+  glBindTexture(GL_TEXTURE_2D, textures[button_rules]);
   draw_rectangle(c,20,100);
-
+  glBindTexture(GL_TEXTURE_2D, 0);
   /*quit button*/
+  glBindTexture(GL_TEXTURE_2D, textures[button_quit]);
   glPushMatrix();
   glTranslatef(0, -40,0);
   draw_rectangle(c,20,100);
   glPopMatrix();
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  glDisable(GL_TEXTURE_2D);
 }
 
-void draw_rules_screen(){
+void draw_rules_screen(GLuint *textures){
+  glEnable(GL_TEXTURE_2D);
+  glColor4f(1.0, 1.0, 1.0, 1.0);
+
   CustomColor c = color(255,255,225);
   /*background*/
+  glBindTexture(GL_TEXTURE_2D, textures[rules_screen]);
   draw_rectangle(c,200,200);
-  /*quit button*/
-  c = color(255,0,50);
+  /*return button*/
+  glBindTexture(GL_TEXTURE_2D, textures[button_return]);
   glPushMatrix();
   glTranslatef(45,85,0);
   draw_rectangle(c,20,100);
   glPopMatrix();
-  c = color(255,0,50);
+
+  glDisable(GL_TEXTURE_2D);
 }
-void draw_end_screen(){
+void draw_end_screen(GLuint *textures){
+  glEnable(GL_TEXTURE_2D);
+  glColor4f(1.0, 1.0, 1.0, 1.0);
+
   CustomColor c = color(255,255,225);
   /*background*/
+  glBindTexture(GL_TEXTURE_2D, textures[ending_screen]);
   draw_rectangle(c,200,200);
-
-  c = color(255,0,50);
   /*replay button*/
+  glBindTexture(GL_TEXTURE_2D, textures[button_replay]);
   draw_rectangle(c,20,100);
   /*quit button*/
+  glBindTexture(GL_TEXTURE_2D, textures[button_quit]);
   glPushMatrix();
   glTranslatef(0, -40,0);
   draw_rectangle(c,20,100);
   glPopMatrix();
+
+  glDisable(GL_TEXTURE_2D);
 }

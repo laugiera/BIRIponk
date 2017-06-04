@@ -7,6 +7,7 @@
 #if defined __linux
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <SDL/SDL_image.h>
 #elif defined __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -17,11 +18,10 @@
 #include "elements/ball.h"
 
 void init_ball(Ball *b, Player *p){
-  CustomColor vert = color(100, 200, 0);
   b->player = p;
   b->position = pointPlusVector(b->player->bat->position, multVector(b->player->start_orientation, b->player->bat->height/2+b->diam/2+1));/*test +1 pour bug décolage*/
-  b->diam = 20;
-  b->color = vert;
+  b->diam = 15;
+  b->color = p->color;
   b->velocity = p->start_orientation;
   b->speed = 0;
   /*b->speed = 0.6;*/
@@ -112,7 +112,7 @@ void ball_check_death(Ball *ball, Gameboard *board){
  }
 }
 
-int ball_check_brick(Ball *ball, Brick *brick, Gameboard *board) {
+int ball_check_brick(Ball *ball, Brick *brick, Gameboard *board ) {
   float dist_x = fabs(brick->position.x-ball->position.x)-ball->diam/2;
   float dist_y = fabs(brick->position.y-ball->position.y)-ball->diam/2;
   if(dist_x <= brick->length/2 && dist_y <= brick->height/2){

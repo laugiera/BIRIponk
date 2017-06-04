@@ -11,9 +11,10 @@ typedef struct _player{
   float life;
   struct _ball * ball;
   struct _bat * bat;
+  CustomColor color;
 }Player;
 
-void init_player(Player *p, int id);
+void init_player(Player *p, int id, CustomColor c);
 void free_player(Player *p);
 void draw_life(Player *p);
 

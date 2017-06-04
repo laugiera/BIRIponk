@@ -7,6 +7,7 @@
 #if defined __linux
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <SDL/SDL_image.h>
 #elif defined __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -99,13 +100,13 @@ void draw_rounded_square(int full, float radius, CustomColor color) {
 void draw_rectangle(CustomColor color, float hauteur, float largeur) {
   glBegin(GL_POLYGON);
   glColor3ub(color.r, color.g, color.b);
-  /*glTexCoord2f(0,0);*/
+  glTexCoord2f(0,0);
   glVertex2f(-(largeur/2), hauteur/2);
-  /*glTexCoord2f(1,0);*/
+  glTexCoord2f(1,0);
   glVertex2f(largeur/2, hauteur/2);
-  /*glTexCoord2f(1,1);*/
+  glTexCoord2f(1,1);
   glVertex2f(largeur/2, -(hauteur/2));
-  /*glTexCoord2f(0,1);*/
+  glTexCoord2f(0,1);
   glVertex2f(-(largeur/2), -(hauteur/2));
   glEnd();
 }

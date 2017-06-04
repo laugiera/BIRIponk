@@ -7,6 +7,7 @@
 #if defined __linux
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <SDL/SDL_image.h>
 #elif defined __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -16,7 +17,7 @@
 #include "fonctions.h"
 #include "elements/player.h"
 
-void init_player(Player *p, int id){
+void init_player(Player *p, int id, CustomColor c){
   p->id=id;
   p->life = 5.0;
   p->ball = malloc(sizeof(Ball));
@@ -25,6 +26,7 @@ void init_player(Player *p, int id){
   p->bat = malloc(sizeof(Bat));
   if(!p->bat)
     exit(1);
+  p->color = c;
   init_bat(p->bat, p);
   init_ball(p->ball, p);
 
@@ -41,7 +43,7 @@ void draw_life(Player *p){
   Point3D position = p->start_position;
   if(p->start_orientation.y == -1)
     position.x -= 100;
-  CustomColor c = color(67,202,112);
+  CustomColor c = color(p->color.r+50, p->color.g+10,p->color.b+10);
   for(i=0; i<5; i++){
     position.x += 1.5 * taille;
     if(i+1 > p->life)
