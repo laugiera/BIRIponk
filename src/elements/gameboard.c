@@ -16,9 +16,18 @@
 #include "fonctions.h"
 #include "elements/gameboard.h"
 
+/**
+ * initialise la structure gameboard passée en paramètre en fonction du nombre de joueurs
+ * et du fichier de chargement des briques
+ * important : les start_orientation et start_position des players doivent être définies
+ * avant d'utiliser init_player()
+ * @param board            pointeur sur une struct Gameboard
+ * @param nb_players       nombre de joueurs dans la partie
+ * @param layout_file_path chemin vers le fichier de chargement
+ */
 void init_gameboard(Gameboard *board, int nb_players, char * layout_file_path){
   int i;
-  board->nb_players = nb_players; /*max à définir*/
+  board->nb_players = nb_players;
   board->players = malloc(sizeof(Player)*nb_players);
   if(!board->players){
     exit(1);
@@ -50,6 +59,10 @@ void init_gameboard(Gameboard *board, int nb_players, char * layout_file_path){
   init_bricks(board->bricks,1, nb_players, layout_file_path);
 }
 
+/**
+ * Libère l'espace mémoire attribué au gameboard
+ * @param board pointeur sur une struc Gameboard
+ */
 void free_gameboard(Gameboard *board){
   int i;
   for(i=0; i<board->nb_players; i++){
@@ -59,6 +72,10 @@ void free_gameboard(Gameboard *board){
   free(board->bricks);
 }
 
+/**
+ * Fonction générale d'affichage de tous les éléments du gameboard
+ * @param board pointeur sur une struc Gameboard
+ */
 void draw_gameboard(Gameboard board){
     int i;
   draw_bricks(board.bricks, board.nb_bricks);
@@ -69,6 +86,12 @@ void draw_gameboard(Gameboard board){
   }
 }
 
+/**
+ * Fonction générale de mise à jour de tous les éléments du gameboard
+ * @param  board    pointeur sur une struc Gameboard
+ * @param  keystate pointeur sur un tableau keystate SDL (voir doc SDL)
+ * @return          l'id du gagnant de la partie, -1 si elle n'est pas terminée
+ */
 int update_gameboard(Gameboard *board, Uint8 *keystate){
   /*Player 1*/
   if ( keystate[SDLK_LEFT]  )
@@ -93,6 +116,11 @@ int update_gameboard(Gameboard *board, Uint8 *keystate){
   return winner(board);
 }
 
+/**
+ * Determine si la partie a été gagnée et par qui
+ * @param  board pointeur sur une struc Gameboard
+ * @return       l'id du gagnant de la partie, -1 si elle n'est pas terminée
+ */
 int winner(Gameboard *board){
   int i, count=0, winner;
   if (board->nb_players == 1){
@@ -110,6 +138,9 @@ int winner(Gameboard *board){
 
 }
 
+/**
+ * Dessine le menu principal du jeu
+ */
 void draw_start_screen(){
   CustomColor c = color(255,255,225);
   /*background*/

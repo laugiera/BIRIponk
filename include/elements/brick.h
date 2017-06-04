@@ -16,7 +16,7 @@ typedef struct _brick{
 }Brick;
 
 int get_nb_bricks(char *layout_file_path);
-int init_bricks(Brick *bricks, int level, int nb_players, char *layout_file_path);
+int init_bricks(Brick *bricks, int nb_players, char *layout_file_path);
 void draw_bricks(Brick *bricks, int nb);
 
 #endif

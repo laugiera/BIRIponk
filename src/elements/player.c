@@ -16,6 +16,13 @@
 #include "fonctions.h"
 #include "elements/player.h"
 
+/**
+ * Initialise une structure Joueur passée en paramètre avec un id
+ * les champs start_orientation et start_position doivent avoir été initialisé au préallable
+ * en fonction du nombre de joueurs.
+ * @param p  pointeur sur une structure Player
+ * @param id int de 0 au nombre de joueur-1
+ */
 void init_player(Player *p, int id){
   p->id=id;
   p->life = 5.0;
@@ -31,11 +38,19 @@ void init_player(Player *p, int id){
 
 }
 
+/**
+ * Libère l'espace mémoire attribué à un joueur
+ * @param p pointeur sur une structure Player
+ */
 void free_player(Player *p){
   free(p->ball);
   free(p->bat);
 }
 
+/**
+ * Affiche la barre de vie d'un joueur
+ * @param p pointeur sur une structure Player
+ */
 void draw_life(Player *p){
   int i, taille = 10;
   Point3D position = p->start_position;
