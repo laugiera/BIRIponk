@@ -1,3 +1,7 @@
+/**
+ * Fonctions liées au gameboard
+ */
+ 
 #ifndef GAMEBOARD_H_
 #define GAMEBOARD_H_
 
@@ -14,9 +18,7 @@ typedef struct _gameboard{
 void init_gameboard(Gameboard *gb, int nb_players,char * layout_file_path);
 void free_gameboard(Gameboard *gameboard);
 void draw_gameboard(Gameboard board, GLuint * textures);
-void draw_start_screen(GLuint * textures);
-void draw_rules_screen(GLuint *textures);
-void draw_end_screen(GLuint *textures);
 int update_gameboard(Gameboard *board, Uint8 *keystate);
 int winner(Gameboard *board);
+
 #endif

@@ -1,4 +1,7 @@
-#include <stdlib.h>
+/**
+ * Fonctions liées aux briques
+ */
+ #include <stdlib.h>
 #include <stdio.h>
 #include <SDL/SDL.h>
 #include <stdlib.h>
@@ -17,6 +20,12 @@
 #include "fonctions.h"
 #include "elements/brick.h"
 
+/**
+ * Determine le nombre de briques du niveau
+ * en fonction des données présentes dans le fichier de chargement
+ * @param  layout_file_path chemin vers le fichier de chargement des briques
+ * @return                  int nombre de briques
+ */
 int get_nb_bricks(char *layout_file_path){
   /*charge le fichier de briques*/
   FILE * level_file = NULL;
@@ -31,7 +40,16 @@ int get_nb_bricks(char *layout_file_path){
   return rows*cols;
 }
 
-int init_bricks(Brick *bricks, int level, int nb_players, char *layout_file_path){
+/**
+ * Inialise toutes les briques du jeu
+ * en fonction des données présentes dans le fichier de chargement.
+ * Rapport 1/2 entre largeur et hauteur d'une brique.
+ * @param  bricks           pointeur sur le tableau de briques du gameboard
+ * @param  nb_players       int nombre de joueurs
+ * @param  layout_file_path chemin vers le fichier de chargement des briques
+ * @return                  int nombre de briques
+ */
+int init_bricks(Brick *bricks, int nb_players, char *layout_file_path){
   /*charge le fichier de briques*/
   FILE * level_file = NULL;
 
@@ -95,6 +113,12 @@ int init_bricks(Brick *bricks, int level, int nb_players, char *layout_file_path
   return nb_bricks;
 }
 
+/**
+ * Affiche toutes les briques à l'écran, seulement si elle n'ont pas été détruites, grace à leur position
+ * @param bricks  pointeur vers le tableau de bricks du gameboard
+ * @param nb      int nombre de briques initial
+ * @param textures  GLuint * pointeur sur le tableau de textures
+ */
 void draw_bricks(Brick *bricks, int nb, GLuint * textures){
   int i;
   for (i = 0; i < nb; i++) {

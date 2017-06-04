@@ -1,3 +1,7 @@
+/**
+ * Fonctions liées aux briques
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <SDL/SDL.h>
@@ -8,7 +12,6 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <SDL/SDL_image.h>
-#include <SDL/SDL_mixer.h>
 #elif defined __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -18,9 +21,18 @@
 #include "fonctions.h"
 #include "elements/gameboard.h"
 
+/**
+ * initialise la structure gameboard passée en paramètre en fonction du nombre de joueurs
+ * et du fichier de chargement des briques
+ * important : les start_orientation et start_position des players doivent être définies
+ * avant d'utiliser init_player()
+ * @param board            pointeur sur une struct Gameboard
+ * @param nb_players       nombre de joueurs dans la partie
+ * @param layout_file_path chemin vers le fichier de chargement
+ */
 void init_gameboard(Gameboard *board, int nb_players, char * layout_file_path){
   int i;
-  board->nb_players = nb_players; /*max à définir*/
+  board->nb_players = nb_players;
   board->players = malloc(sizeof(Player)*nb_players);
   if(!board->players){
     exit(1);
@@ -53,9 +65,13 @@ void init_gameboard(Gameboard *board, int nb_players, char * layout_file_path){
   board->bricks  = malloc(sizeof(Brick)*board->nb_bricks);
   if(!board->bricks)
     exit(1);
-  init_bricks(board->bricks,1, nb_players, layout_file_path);
+  init_bricks(board->bricks, nb_players, layout_file_path);
 }
 
+/**
+ * Libère l'espace mémoire attribué au gameboard
+ * @param board pointeur sur une struc Gameboard
+ */
 void free_gameboard(Gameboard *board){
   int i;
   for(i=0; i<board->nb_players; i++){
@@ -65,6 +81,11 @@ void free_gameboard(Gameboard *board){
   free(board->bricks);
 }
 
+/**
+ * Fonction générale d'affichage de tous les éléments du gameboard
+ * @param board pointeur sur une struc Gameboard
+ * @param textures  GLuint * pointeur sur le tableau de textures
+ */
 void draw_gameboard(Gameboard board, GLuint * textures){
   glEnable(GL_TEXTURE_2D);
   glColor4f(1.0, 1.0, 1.0, 1.0);
@@ -82,6 +103,12 @@ void draw_gameboard(Gameboard board, GLuint * textures){
     glDisable(GL_TEXTURE_2D);
 }
 
+/**
+ * Fonction générale de mise à jour de tous les éléments du gameboard
+ * @param  board    pointeur sur une struc Gameboard
+ * @param  keystate pointeur sur un tableau keystate SDL (voir doc SDL)
+ * @return          l'id du gagnant de la partie, -1 si elle n'est pas terminée
+ */
 int update_gameboard(Gameboard *board, Uint8 *keystate){
   /*Player 1*/
   if ( keystate[SDLK_LEFT]  )
@@ -106,6 +133,11 @@ int update_gameboard(Gameboard *board, Uint8 *keystate){
   return winner(board);
 }
 
+/**
+ * Determine si la partie a été gagnée et par qui
+ * @param  board pointeur sur une struc Gameboard
+ * @return       l'id du gagnant de la partie, -1 si elle n'est pas terminée
+ */
 int winner(Gameboard *board){
   int i, count=0, winner;
   if (board->nb_players == 1){
@@ -121,94 +153,4 @@ int winner(Gameboard *board){
     return (count == 1)? winner: -1;
   }
 
-}
-
-void draw_start_screen(GLuint * textures){
-  glEnable(GL_TEXTURE_2D);
-  glColor4f(1.0, 1.0, 1.0, 1.0);
-
-  CustomColor c = color(255,255,225);
-  /*background*/
-  glBindTexture(GL_TEXTURE_2D, textures[start_screen]);
-  draw_rectangle(c,200,200);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  /*choixnb joueurs*/
-  glBindTexture(GL_TEXTURE_2D, textures[button_1p]);
-  glPushMatrix();
-  glTranslatef(-36,40,0);
-  draw_rectangle(c,20,15);
-  glPopMatrix();
-  glBindTexture(GL_TEXTURE_2D, 0);
-  /*choixnb joueurs*/
-  glBindTexture(GL_TEXTURE_2D, textures[button_2p]);
-  glPushMatrix();
-  glTranslatef(-12,40,0);
-  draw_rectangle(c,20,15);
-  glPopMatrix();
-  glBindTexture(GL_TEXTURE_2D, 0);
-  /*choixnb joueurs*/
-  glBindTexture(GL_TEXTURE_2D, textures[button_3p]);
-  glPushMatrix();
-  glTranslatef(12,40,0);
-  draw_rectangle(c,20,15);
-  glPopMatrix();
-  glBindTexture(GL_TEXTURE_2D, 0);
-  /*choixnb joueurs*/
-  glBindTexture(GL_TEXTURE_2D, textures[button_4p]);
-  glPushMatrix();
-  glTranslatef(36,40,0);
-  draw_rectangle(c,20,15);
-  glPopMatrix();
-  glBindTexture(GL_TEXTURE_2D, 0);
-  /*rules button*/
-  glBindTexture(GL_TEXTURE_2D, textures[button_rules]);
-  draw_rectangle(c,20,100);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  /*quit button*/
-  glBindTexture(GL_TEXTURE_2D, textures[button_quit]);
-  glPushMatrix();
-  glTranslatef(0, -40,0);
-  draw_rectangle(c,20,100);
-  glPopMatrix();
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  glDisable(GL_TEXTURE_2D);
-}
-
-void draw_rules_screen(GLuint *textures){
-  glEnable(GL_TEXTURE_2D);
-  glColor4f(1.0, 1.0, 1.0, 1.0);
-
-  CustomColor c = color(255,255,225);
-  /*background*/
-  glBindTexture(GL_TEXTURE_2D, textures[rules_screen]);
-  draw_rectangle(c,200,200);
-  /*return button*/
-  glBindTexture(GL_TEXTURE_2D, textures[button_return]);
-  glPushMatrix();
-  glTranslatef(45,85,0);
-  draw_rectangle(c,20,100);
-  glPopMatrix();
-
-  glDisable(GL_TEXTURE_2D);
-}
-void draw_end_screen(GLuint *textures){
-  glEnable(GL_TEXTURE_2D);
-  glColor4f(1.0, 1.0, 1.0, 1.0);
-
-  CustomColor c = color(255,255,225);
-  /*background*/
-  glBindTexture(GL_TEXTURE_2D, textures[ending_screen]);
-  draw_rectangle(c,200,200);
-  /*replay button*/
-  glBindTexture(GL_TEXTURE_2D, textures[button_replay]);
-  draw_rectangle(c,20,100);
-  /*quit button*/
-  glBindTexture(GL_TEXTURE_2D, textures[button_quit]);
-  glPushMatrix();
-  glTranslatef(0, -40,0);
-  draw_rectangle(c,20,100);
-  glPopMatrix();
-
-  glDisable(GL_TEXTURE_2D);
 }

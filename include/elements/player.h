@@ -1,3 +1,7 @@
+/**
+ * Fonctions liées au joueur
+ */
+
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
@@ -6,8 +10,8 @@
 
 typedef struct _player{
   int id;
-  struct _point3D start_position;
-  struct _vector3D start_orientation;
+  struct _Point2D start_position;
+  struct _Vector2D start_orientation;
   float life;
   struct _ball * ball;
   struct _bat * bat;
@@ -17,6 +21,5 @@ typedef struct _player{
 void init_player(Player *p, int id, CustomColor c);
 void free_player(Player *p);
 void draw_life(Player *p);
-
 
 #endif

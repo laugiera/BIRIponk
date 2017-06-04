@@ -1,6 +1,9 @@
+/**
+ * Fonctions d'initialisation SDL, gestions des textures et des menus
+ */
+
 #ifndef FONCTIONS_H_
 #define FONCTIONS_H_
-
 
 typedef enum { false, true } bool;
 
@@ -24,4 +27,8 @@ void reshape(unsigned int width, unsigned int height);
 void load_images(SDL_Surface ** images);
 void init_textures(SDL_Surface ** images, int nb_textures, GLuint * textures);
 void free_textures(SDL_Surface ** images, int nb_textures, GLuint *textures);
+void draw_start_screen(GLuint * textures);
+void draw_rules_screen(GLuint *textures);
+void draw_end_screen(GLuint *textures);
+
 #endif

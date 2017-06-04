@@ -1,3 +1,7 @@
+/**
+* Fonctions liées à la balle
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <SDL/SDL.h>
@@ -17,6 +21,11 @@
 #include "fonctions.h"
 #include "elements/ball.h"
 
+/**
+* Initialise la structure Ball passée en paramètre en utuilisant les caractéristiques du joueur qui la possède
+* @param b pointeur sur une structure Ball
+* @param p pointeur sur une structure Player
+*/
 void init_ball(Ball *b, Player *p){
   b->player = p;
   b->position = pointPlusVector(b->player->bat->position, multVector(b->player->start_orientation, b->player->bat->height/2+b->diam/2+1));/*test +1 pour bug décolage*/
@@ -24,9 +33,12 @@ void init_ball(Ball *b, Player *p){
   b->color = p->color;
   b->velocity = p->start_orientation;
   b->speed = 0;
-  /*b->speed = 0.6;*/
 }
 
+/**
+* Affiche une structure Ball à l'écran grace à sa position
+* @param b pointeur sur une structure Ball
+*/
 void draw_ball(Ball b){
   glPushMatrix();
   glTranslatef(b.position.x, b.position.y, 0);
@@ -35,12 +47,17 @@ void draw_ball(Ball b){
   glPopMatrix();
 }
 
+/**
+* Met à jour la position d'une balle ainsi que sa velocity (direction) et sa vitesse
+* @param b     pointeur sur une structure Ball
+* @param board pointeur sur une structure Gameboard
+*/
 void update_ball_position(Ball *b, Gameboard *board){
   if(b->speed == 0){
     resting_ball(b);
     return;
   }
-  Vector3D acceleration = multVector(normalize(b->velocity), b->speed);
+  Vector2D acceleration = multVector(normalize(b->velocity), b->speed);
   b->position = pointPlusVector(b->position, addVectors(b->velocity, acceleration));
   ball_check_death(b, board);
   ball_check_edges(b);
@@ -52,6 +69,11 @@ void update_ball_position(Ball *b, Gameboard *board){
   }
 }
 
+/**
+* Detecte les collisions avec les bords de la fenetre et modifie la direction de balle
+* pour la faire rebondir
+* @param b pointeur sur une structure Ball
+*/
 void ball_check_edges(Ball *b){
   if(b->position.x>= 100-b->diam/2){
     b->velocity.x *= -1;
@@ -71,6 +93,13 @@ void ball_check_edges(Ball *b){
   }
 }
 
+/**
+* Detecte les collisions avec les raquettes des joueurs et modifie la direction de balle
+* pour la faire rebondir
+* Nécessite des informations sur les joueurs
+* @param ball  pointeur sur une structure Ball
+* @param board pointeur sur une structure Gameboard
+*/
 void ball_check_bat(Ball *ball, Gameboard *board) {
   int i;
   for (i=0; i<board->nb_players; i++){
@@ -88,31 +117,42 @@ void ball_check_bat(Ball *ball, Gameboard *board) {
   return;
 }
 
+/**
+* Detecte quand la balle tue un joueur (dépasse sa limite)
+* lui fait perdre une vite
+* Remet la balle à son état de base sur la raquette du joueur qui la possède
+* Nécessite des informations sur les joueurs
+* @param ball  pointeur sur une structure Ball
+* @param board pointeur sur une structure Gameboard
+*/
 void ball_check_death(Ball *ball, Gameboard *board){
- int i;
- for (i=0; i<board->nb_players; i++){
-   Player *p = &(board->players[i]);
-   float factor = p->start_orientation.y;
-   /* à réutiliser pour faire le 2++ joueurs
-   if (factor ==0){
-     factor = board->players[i].start_orientation.x;
-   }
-   */
-   float dist_y = (p->start_position.y - ball->position.y) + factor*ball->diam/2;
-   factor *= -1;
-   dist_y *= factor;
-   if (dist_y <= 0) {
-      printf("DEATH\n");
+  int i;
+  for (i=0; i<board->nb_players; i++){
+    Player *p = &(board->players[i]);
+    float factor = p->start_orientation.y;
+    float dist_y = (p->start_position.y - ball->position.y) + factor*ball->diam/2;
+    factor *= -1;
+    dist_y *= factor;
+    if (dist_y <= 0) {
       p->life -= 1.0;
       /*retour aux réglages de base*/
       ball->speed = 0;
       ball->velocity = ball->player->start_orientation;
 
-   }
- }
+    }
+  }
 }
 
-int ball_check_brick(Ball *ball, Brick *brick, Gameboard *board ) {
+/**
+* Detecte les collision entre la balle et une brique
+* ajuste la direction de la balle pour la faire rebondir
+* utilise ball_brick_collision() pour détruire la brique et appliquer les effets
+* @param  ball  pointeur sur une structure Ball
+* @param  brick pointeur sur une structure Brick
+* @param  board pointeur sur une structure Gameboard
+* @return       1 s'il y a eu collision, 0 sinon
+*/
+int ball_check_brick(Ball *ball, Brick *brick, Gameboard *board) {
   float dist_x = fabs(brick->position.x-ball->position.x)-ball->diam/2;
   float dist_y = fabs(brick->position.y-ball->position.y)-ball->diam/2;
   if(dist_x <= brick->length/2 && dist_y <= brick->height/2){
@@ -128,6 +168,11 @@ int ball_check_brick(Ball *ball, Brick *brick, Gameboard *board ) {
   return 0;
 }
 
+/**
+* Detecte les collisions entre la balle et toutes le briques du gameboard en utilisat ball_check_brick()
+* @param ball  pointeur sur une structure Ball
+* @param board pointeur sur une structure Gameboard
+*/
 void ball_check_bricks(Ball *ball, Gameboard *board){
   int i, count = 0;
   for(i=0; i<board->nb_bricks; i++){
@@ -142,6 +187,13 @@ void ball_check_bricks(Ball *ball, Gameboard *board){
   if(count == 0){board->nb_bricks = 0;}
 }
 
+/**
+* Détruit la brique passée en paramètre et applique les effets de celle ci
+* à la balle qui l'a touchée ou à son possesseur
+* @param  ball  pointeur sur une structure Ball
+* @param  brick pointeur sur une structure Brick
+* @return       [description]
+*/
 int ball_brick_collision(Ball *ball, Brick *brick){
   brick->status = OFF;
   /*gestion des bonus*/
@@ -162,6 +214,11 @@ int ball_brick_collision(Ball *ball, Brick *brick){
   return 1;
 }
 
+/**
+* Ajuste la position de la balle pour qu'elle soit à son point de débart
+* sur la raquette de son possesseur
+* @param ball pointeur sur une structure Ball
+*/
 void resting_ball(Ball *ball){
   ball->position = pointPlusVector(ball->player->bat->position, multVector(ball->player->start_orientation, ball->player->bat->height/2+ball->diam/2+1));
 }

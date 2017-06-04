@@ -1,3 +1,6 @@
+/**
+ * Fonctions liées à la barre
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <SDL/SDL.h>
@@ -17,6 +20,11 @@
 #include "fonctions.h"
 #include "elements/bat.h"
 
+/**
+ * Initialise la structure Bat passée en paramètre en fonction des caractéristiques du joueur qui la possède
+ * @param bat pointeur sur une structure Bat
+ * @param p   pointeur sur une structure Joueur
+ */
 void init_bat(Bat *bat, Player *p){
   bat->height = 8;
   bat->length = 25;
@@ -25,6 +33,10 @@ void init_bat(Bat *bat, Player *p){
   bat->velocity = vectorXY(1,1);
 }
 
+/**
+ * Affiche une structure Bat à l'écran en se basant sur des coordonnées globales
+ * @param bat pointeur sur une structure Bat
+ */
 void draw_bat(Bat bat){
   glPushMatrix();
   glTranslatef(bat.position.x, bat.position.y, 0);
@@ -32,6 +44,11 @@ void draw_bat(Bat bat){
   glPopMatrix();
 }
 
+/**
+ * Met à jour la position d'une structure Bat
+ * @param bat  pointeur sur une structure Bat
+ * @param sens gauche ou droite du point de vue du joueur
+ */
 void update_bat_position(Bat *bat, int sens){
   switch (sens) {
     case droite:

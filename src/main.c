@@ -27,15 +27,12 @@ int main(int argc, char** argv) {
   }
   setVideoMode();
   SDL_WM_SetCaption("BIRIPONG", NULL);
-  if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1)
-    printf("%s", Mix_GetError());
 
-
-/*MAIN LOOP--------------------------------------------------------------------------*/
+  /*VARIABLES*/
   Gameboard gb;
   int loop = 1; int mode = start;
   int nb_players = 0;
-  Point3D mouse = pointXY(-100,-100);
+  Point2D mouse = pointXY(-100,-100);
   Uint8 *keystate = SDL_GetKeyState(NULL);
   /*TEXTURES*/
   int nb_textures = 17;
@@ -43,12 +40,15 @@ int main(int argc, char** argv) {
   GLuint textures[nb_textures];
   load_images(images);
   init_textures(images, nb_textures, textures);
-
+  /*SOUND*/
+  if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1)
+    printf("%s", Mix_GetError());
   Mix_Music *musique;
   musique = Mix_LoadMUS("ressources/musique.mp3");
   Mix_PlayMusic(musique, -1);
   Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
 
+/*MAIN LOOP--------------------------------------------------------------------------*/
   while(loop) {
     Uint32 startTime = SDL_GetTicks();
     /*START MENU--------------------------------------------------------------------------*/
@@ -121,7 +121,7 @@ int main(int argc, char** argv) {
     else if (mode == -1)
       loop = false;
 
-
+    /*SDL EVENTS--------------------------------------------------------------------------*/
     SDL_Event e;
     while(SDL_PollEvent(&e)) {
       switch(e.type) {
