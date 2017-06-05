@@ -81,6 +81,7 @@ int update_gameboard(Gameboard *board, Uint8 *keystate){
 
   if(board->nb_players >= 2){
   /*Player 2*/
+  /*
     if ( keystate['q'] )
       update_bat_position(board->players[1].bat,gauche);
     else if ( keystate['d'] )
@@ -88,6 +89,10 @@ int update_gameboard(Gameboard *board, Uint8 *keystate){
     else if (keystate['z'] && board->players[1].ball->speed == 0)
       board->players[1].ball->speed = 0.6;
     update_ball_position(board->players[1].ball, board);
+  */
+  /*AI*/
+    update_bat_position_AI(board->players[1].bat, board);
+    update_ball_position_AI(board->players[1].ball, board);
   }
 
   return winner(board);

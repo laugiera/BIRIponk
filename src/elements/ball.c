@@ -163,3 +163,23 @@ int ball_brick_collision(Ball *ball, Brick *brick){
 void resting_ball(Ball *ball){
   ball->position = pointPlusVector(ball->player->bat->position, multVector(ball->player->start_orientation, ball->player->bat->height/2+ball->diam/2+1));
 }
+
+void update_ball_position_AI(Ball *b, Gameboard *board){
+  if(b->speed == 0){
+    resting_ball(b);
+    b->speed = 0.6;
+    b->velocity = vectorXY(0,-1);
+    return;
+  }
+  Vector3D acceleration = multVector(normalize(b->velocity), b->speed);
+  b->position = pointPlusVector(b->position, addVectors(b->velocity, acceleration));
+  ball_check_death(b, board);
+  ball_check_edges(b);
+  ball_check_bat(b, board);
+  if(board->nb_bricks){
+    ball_check_bricks(b, board);
+  } else {
+    printf("nb bricks =0\n");
+  }
+
+}

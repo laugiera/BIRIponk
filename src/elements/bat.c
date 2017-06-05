@@ -44,3 +44,28 @@ void update_bat_position(Bat *bat, int sens){
       break;
   }
 }
+
+void update_bat_position_AI(Bat *bat, Gameboard *board){
+  Ball ball = choose_target_AI(bat, board);
+  bat->velocity = normalize(vector(bat->position, ball.position));
+  bat->position.x += bat->velocity.x;
+  if(bat->position.x >= 100-(bat->length/2)) {
+    bat->position.x = 100-(bat->length/2);
+  } else if (bat->position.x <= -100+(bat->length/2)) {
+    bat->position.x = -100+(bat->length/2);
+  }
+}
+
+Ball choose_target_AI(Bat *bat, Gameboard *board) {
+  float dist = 200;
+  int i;
+  Ball *ball;
+  for (i = 0; i<board->nb_players; i++) {
+    float dist_temp = norm(vector(bat->position, board->players[i].ball->position));
+    if (dist_temp <= dist) {
+      dist = dist_temp;
+      ball = board->players[i].ball;
+    }
+  }
+  return *ball;
+}
